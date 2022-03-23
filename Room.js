@@ -1,47 +1,77 @@
-class AllRooms {
+const { Players, Player } = require("./Player.js")
+
+class RoomManager {
 	constructor() {
-		this.count = 0;
 		this.rooms_list = [];
+		this.players_list = [];
+		this.socket_dict = {};
 		}
 	
-	add(room) {
-		this.count += 1;
-		this.rooms_list.push(room);
+	check_player_name_availability(player_name) {
+		let available = true;
+		this.players_list.forEach(player => {
+			if (player.name == player_name) {
+				available = false
+			}
+		});
+		return available;
 	}
+	// add(room) {
+	// 	this.count += 1;
+	// 	this.rooms_list.push(room);
+	// }
 
-	search_room(name) {
-		let room = null;
+	search_room(room_name) {
+		const room = null;
 		this.rooms_list.forEach(element => {
-			if (element.name == name) {
+			if (element.name == room_name) {
 				room = element };
 		})
 		return room;
 	}
+
+	handle_socket_msg(msg, chaussette_id) {
+		if (msg.room_name != undefined && msg.player_name != undefined) {
+			if (this.check_player_name_availability(msg.player_name)) {
+				const room = this.search_room(msg.room_name);
+				if (room == null) {
+					const room_id = this.rooms_list.length;
+					const room = new Room(room_id, msg.room_name);
+					const master 
+				}
+			}
+		}
+	// 	let room = this.search_room(msg.room_name);
+	// 	if (room == null) {
+	// 		let room = new Room(msg, this.count, chaussette_id);
+	// 		this.add(room);
+	// 		chaussette.emit("success", "Room [" + room.name + "] was created with master [" + msg.player_name + "]")
+	// 	}
+	// 	else {
+	// 		const duplicate_player = room.players.already_exists(msg.player_name);
+	// 		if (duplicate_player == false) {
+	// 			room.players.add_player(msg.player_name);
+	// 			chaussette.emit("success", "Player [" + msg.player_name + "] joined Room [" + room.name + "]")
+	// 		}
+	// 		else if (duplicate_player == true) {
+	// 			chaussette.emit("error", "Player's name [" + msg.player_name + "] already exists")
+	// 		}
+	// 		else {
+	// 			chaussette.emit("error", "Rooms's name [" + msg.room_name + "] already exists")
+	// 		}
+	// 	}
+	// }
 }
 
 class Room {
-	constructor(data, id) {
+	constructor(id, name) {
 		this.id = id;
-		this.name = data.room_name;
-		this.master = data.player_name
-		this.players = []
+		this.name = name;
+		this.players = new Players();
 	}
-
   }
 
-function room_manager (msg, all_rooms, io) {
-	let room = all_rooms.search_room(msg.room_name);
-	if (room == null) {
-		console.log("Creating Room [" + msg.room_name + "]");
-		let room = new Room(msg, all_rooms.count);
-		all_rooms.add(room);
-		io.emit("server_msg", room)
-	}
-	else {
-		console.log("Room [" + msg.room_name + "] already exists!")
-	}
-}
 
-  module.exports = {AllRooms, Room, room_manager}
+  module.exports = {Room, RoomManager}
 
   
