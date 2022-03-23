@@ -15,15 +15,12 @@ const room_manager = new RoomManager();
 
 io.on('connection', (socket) => {
 	console.log('a user connected');
-	console.log(socket.id);
 	socket.on('room', (msg) => {
-		room_manager.handle_socket_msg(msg, socket.id);
-		console.log(all_rooms);
+		room_manager.handle_socket_msg(msg, socket.id, io);
+		console.log(room_manager.global_rooms_list);
 	});
 	socket.on('disconnect', () => {
 		console.log('user disconnected');
-		console.log(socket.id);
-		// room_manager(msg, all_rooms, io);
 	  });
   });
 
