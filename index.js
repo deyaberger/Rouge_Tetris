@@ -20,7 +20,10 @@ io.on('connection', (socket) => {
 		console.log(room_manager.global_rooms_list);
 	});
 	socket.on('disconnect', () => {
+		room_manager.remove_user(socket.id);
 		console.log('user disconnected');
+		console.log(room_manager.global_rooms_list);
+		console.log(room_manager.global_players_list);
 	  });
   });
 

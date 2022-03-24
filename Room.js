@@ -3,7 +3,7 @@ const { Player } = require("./Player.js")
 class Room {
 	constructor(name) {
 		this.name = name;
-		this.players_list = [];
+		this.players_list = {};
 		this.master = null;
 	}
   }
@@ -33,7 +33,7 @@ class RoomManager {
 	}
 
 	assign_player_to_room(player, room) {
-		room.players_list.push(player);
+		room.players_list[player.name] = player;
 	}
 
 	assign_room_to_player(room, player) {
@@ -77,11 +77,26 @@ class RoomManager {
 				const room = this.find_or_create_room(msg.room_name);
 				const player = new Player(msg.player_name, chaussette_id);
 				this.connect_room_player_socket(room, player, chaussette_id);
-				io.emit("succes", "player: [" + player.name + "] has joined room: [" + room.name + "]")
+				io.emit("success", "player: [" + player.name + "] has joined room: [" + room.name + "]")
 			}
 			else {
 				io.emit("error", "sorry, this player's name is already taken");
 			}
+		}
+	}
+
+	remove_user(chaussette_id) {
+		// Need to be better written
+		if (this.socket_dict[chaussette_id] != undefined) {
+			const player_name = this.socket_dict[chaussette_id]["player"];
+			const room_name = this.socket_dict[chaussette_id]["room"];
+			if (player_name != undefined && room_name != undefined) {
+				delete (this.global_rooms_list[room_name].players_list[player_name]);
+				delete (this.global_players_list[player_name]);
+				if (Object.keys(this.global_rooms_list[room_name].players_list).length === 0) {
+					delete (this.global_rooms_list[room_name]);
+				}
+			}	
 		}
 	}
 }
