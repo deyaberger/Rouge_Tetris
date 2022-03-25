@@ -4,11 +4,11 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const { RoomManager } = require('./Room');
-const io = new Server(server);
-
-// app.get('/', (req, res) => {
-//   res.sendFile(__dirname + '/index.html');
-// });
+const io = new Server(server, {
+	cors : {
+		methods: ["GET", "POST"] 
+	}
+});
 
 const room_manager = new RoomManager();
  
