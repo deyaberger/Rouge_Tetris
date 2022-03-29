@@ -17,11 +17,11 @@ io.on('connection', (socket) => {
 	// socket.emit("hello", "world");
 	console.log('a user connected');
 	socket.on('room', (msg) => {
-		room_manager.handle_socket_msg(msg, socket, io);
+		room_manager.handle_socket_msg(msg, socket);
 		console.log(room_manager.global_rooms_list);
 	});
 	socket.on('disconnect', () => {
-		room_manager.remove_user(socket.id);
+		room_manager.remove_user(socket.id, io);
 		console.log('user disconnected');
 		console.log(room_manager.global_rooms_list);
 		console.log(room_manager.global_players_list);

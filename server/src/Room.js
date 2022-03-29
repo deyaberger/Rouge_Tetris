@@ -85,6 +85,7 @@ class RoomManager {
 	success_msg(player, room) {
 		const spectres = this.get_other_player_spectres(player, room);
 		const msg = {
+			"msg" : `Success in adding player [${player.name}] to room [${room.name}]`,
 			"game_on" : false,
 			"room_name" : room.name,
 			"player_name" : player.name,
@@ -98,6 +99,7 @@ class RoomManager {
 
 	new_player_msg(player) {
 		const msg = {
+			"msg" : `player [${player.name}] has joined the room`,
 			"new_player" : player.name,
 			"spectre" : player.spectre
 		}
@@ -106,7 +108,7 @@ class RoomManager {
 	}
 
 	
-	handle_socket_msg(msg, chaussette, io) {
+	handle_socket_msg(msg, chaussette) {
 		if (msg.room_name != undefined && msg.player_name != undefined) {
 			if (this.player_do_not_exists(msg.player_name)) {
 				const room = this.find_or_create_room(msg.room_name);
@@ -128,13 +130,22 @@ class RoomManager {
 		room.players_list[new_masters_name].master = true;
 	}
 
-	remove_user(chaussette_id) {
+	exit_user_msg(room_name, player_name, master_is_leaving) {
+		const msg = {
+			"msg" : `player ${player_name} has left the room`,
+			"master_is_leaving" : master_is_leaving,
+			"masters_name" : this.global_rooms_list[room_name].master
+		}
+		return (msg);
+	}
+
+	remove_user(chaussette_id, io) {
 		// Need to be better written
 		if (this.socket_dict[chaussette_id] != undefined) {
 			const player_name = this.socket_dict[chaussette_id]["player"];
 			const room_name = this.socket_dict[chaussette_id]["room"];
+			let master_is_leaving = false;
 			if (player_name != undefined && room_name != undefined) {
-				let master_is_leaving = false;
 				if (player_name == this.global_rooms_list[room_name].master) {
 					master_is_leaving = true;
 				}
@@ -146,7 +157,8 @@ class RoomManager {
 				else if (master_is_leaving == true) {
 					this.assign_new_master(this.global_rooms_list[room_name])
 				}
-			}	
+				io.in(room_name).emit("a_player_left", this.exit_user_msg(room_name, player_name, master_is_leaving));
+			}
 		}
 	}
 }
