@@ -14,10 +14,10 @@ const room_manager = new RoomManager();
  
 
 io.on('connection', (socket) => {
-	socket.emit("hello", "world");
+	// socket.emit("hello", "world");
 	console.log('a user connected');
 	socket.on('room', (msg) => {
-		room_manager.handle_socket_msg(msg, socket.id, io);
+		room_manager.handle_socket_msg(msg, socket, io);
 		console.log(room_manager.global_rooms_list);
 	});
 	socket.on('disconnect', () => {

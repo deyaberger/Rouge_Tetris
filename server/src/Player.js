@@ -4,6 +4,8 @@ class Player {
 		this.chaussette_id = chaussette_id;
 		this.room_name = null;
 		this.master = false;
+		this.tetris = [[]];
+		this.spectre = [[]];
 	}
 }
 
