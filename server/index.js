@@ -14,12 +14,32 @@ const room_manager = new RoomManager();
  
 
 io.on('connection', (socket) => {
-	// socket.emit("hello", "world");
 	console.log('a user connected');
-	socket.on('room', (msg) => {
-		room_manager.handle_socket_msg(msg, socket);
+
+	var room = null;
+	socket.on('join_room', (msg) => {
+		room = room_manager.handle_socket_msg(msg, socket);
 		console.log(room_manager.global_rooms_list);
+		if (room == null)
+		{
+			emit("error")
+			// close
+		}
+		emit("game_state", room.get_state())
 	});
+
+	var game = null
+	socket.on("start", (msg) => {
+		game = room.start()
+		emit("game_state", room.get_state(ID))
+	})
+
+	socket.on("action", (msg) => {
+		game.do_action(msg, playerID)
+		emit("game_state", room.get_state())
+	})
+
+
 	socket.on('disconnect', () => {
 		room_manager.remove_user(socket.id, io);
 		console.log('user disconnected');

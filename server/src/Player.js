@@ -1,11 +1,10 @@
+const {row, col, create_2d_array} = require("./utils")
+
 class Player {
-	constructor(name, chaussette_id) {
+	constructor(name) {
 		this.name = name;
-		this.chaussette_id = chaussette_id;
-		this.room_name = null;
-		this.master = false;
-		this.tetris = [[]];
-		this.spectre = [[]];
+		// this.room_name = null;
+		// this.master = false;
 	}
 }
 

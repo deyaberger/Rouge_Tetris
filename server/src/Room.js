@@ -3,8 +3,34 @@ const { Player } = require("./Player.js")
 class Room {
 	constructor(name) {
 		this.name = name;
-		this.players_list = {};
 		this.master = null;
+		this.game_on = false;
+		this.players_list = {};
+	}
+
+	get_other_player_spectres(ID) {
+		let spectres = {}
+		if (Object.keys(this.players_list).length > 1) {
+			for (var key in this.players_list) {
+				if (key != ID) {
+					spectres[key] = this.players_list[key].spectre; // ! WERE SHOULD IT GO??
+				}
+			}
+		}
+		return (spectres);
+	}
+
+	get_state(ID) {
+		const player = this.players_list[ID];
+		const state = {
+			"game_on" : this.game_on,
+			"room_name" : this.name,
+			"player_name" : player.name,
+			"master" : this.master,
+			"winner" : null,
+			"tetris" : player.game.background, // ! TO BE ADDED
+			"spectres" : this.get_spectres(ID)
+		}
 	}
   }
 
@@ -12,8 +38,8 @@ class Room {
 class RoomManager {
 	constructor() {
 		this.global_rooms_list = {};
-		this.global_players_list = {};
-		this.socket_dict = {};
+		// this.global_players_list = {};
+		// this.socket_dict = {};
 		}
 	
 	find_or_create_room(room_name) {
@@ -24,104 +50,70 @@ class RoomManager {
 		return room;
 	}
 	
+	player_already_exists(name) {
+		for (var key in this.global_rooms_list) {
+			if (dictionary.hasOwnProperty(key)) {   
+				const player_name = this.global_rooms_list[key]
+				if (player_name == name) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
-	player_do_not_exists(name) {
-		if (this.global_players_list[name] == undefined) {
+	is_room_available(room)
+	{
+		if (room.game_on == false) {
 			return true;
 		}
-		return false
-	}
-
-	assign_player_to_room(player, room) {
-		room.players_list[player.name] = player;
-	}
-
-	assign_room_to_player(room, player) {
-		player.room_name = room.name;
+		return false;
 	}
 
 	assign_master(room, player) {
 		room.master = player.name;
-		player.master = true;
+	}
+
+	assign_player_to_room(player, room, chaussette_id) {
+		room.players_list[chaussette_id] = player;
 	}
 
 	add_room_to_list(room) {
 		this.global_rooms_list[room.name] = room;
 	}
 
-	add_player_to_list(player) {
-		this.global_players_list[player.name] = player;
-	}
 
-	add_socket_to_list(room, player, chaussette_id) {
-		this.socket_dict[chaussette_id] = {'player' : player.name, 'room' : room.name};
-	}
-
-
-	connect_room_player_socket(room, player, chaussette_id) {
+	connect_room_player(room, player, chaussette_id) {
 		if (room.master == null) {
 			this.assign_master(room, player);
 		}
-		this.assign_player_to_room(player, room);
-		this.assign_room_to_player(room, player);
-
+		this.assign_player_to_room(player, room, chaussette_id);
 		this.add_room_to_list(room);
-		this.add_player_to_list(player);
-		this.add_socket_to_list(room, player, chaussette_id);
 	}
 
-	get_other_player_spectres(player, room) {
-		let spectres = {}
-		if (Object.keys(room.players_list).length > 1) {
-			for (var key in room.players_list) {
-				if (key != player.name) {
-					spectres[key] = room.players_list[key].spectre;
-				}
-			}
-		}
-		return (spectres);
-	}
 
-	success_msg(player, room) {
-		const spectres = this.get_other_player_spectres(player, room);
-		const msg = {
-			"msg" : `Success in adding player [${player.name}] to room [${room.name}]`,
-			"game_on" : false,
-			"room_name" : room.name,
-			"player_name" : player.name,
-			"master" : player.master,
-			"room_master" : room.master,
-			"tetris" : player.tetris,
-			"spectres" : spectres,
-		}
-		return (msg);
-	}
-
-	new_player_msg(player) {
-		const msg = {
-			"msg" : `player [${player.name}] has joined the room`,
-			"new_player" : player.name,
-			"spectre" : player.spectre
-		}
-		return (msg);
-
-	}
-
-	
 	handle_socket_msg(msg, chaussette) {
-		if (msg.room_name != undefined && msg.player_name != undefined) {
-			if (this.player_do_not_exists(msg.player_name)) {
-				const room = this.find_or_create_room(msg.room_name);
-				const player = new Player(msg.player_name, chaussette.id);
-				this.connect_room_player_socket(room, player, chaussette.id);
-				chaussette.join(room.name);
-				chaussette.emit("success", this.success_msg(player, room))
-				chaussette.to(room.name).emit("new_player", this.new_player_msg(player))
-			}
-			else {
-				chaussette.emit("error", "sorry, this player's name is already taken");
-			}
+		if (msg.room_name == undefined || msg.player_name == undefined)
+		{
+			chaussette.emit("ERROR", "wrong format for join_room msg");
+			return;
 		}
+		if (this.player_already_exists(msg.player_name))
+		{
+			chaussette.emit("error", "sorry, this player's name is already taken");
+			return;
+		}
+		const room = this.find_or_create_room(msg.room_name);
+		if (!this.is_room_available(room))
+		{
+			chaussette.emit("error", "sorry, this room is not available");
+			return;
+		}
+		const player = new Player(msg.player_name);
+		this.connect_room_player(room, player, chaussette.id);
+		chaussette.join(room.name); // ! TO BE CONTINUED !!
+		// chaussette.emit("success", this.success_msg(player, room)) 
+		// chaussette.to(room.name).emit("new_player", this.new_player_msg(player))
 	}
 
 	assign_new_master(room) {
@@ -150,14 +142,17 @@ class RoomManager {
 					master_is_leaving = true;
 				}
 				delete (this.global_rooms_list[room_name].players_list[player_name]);
-				delete (this.global_players_list[player_name]);
-				if (Object.keys(this.global_rooms_list[room_name].players_list).length === 0) {
+				delete (this.global_players_list[player_name]); // ! TO BE DELETED
+				if (Object.keys(this.global_rooms_list[room_name].players_list).length == 0) {
 					delete (this.global_rooms_list[room_name]);
 				}
 				else if (master_is_leaving == true) {
 					this.assign_new_master(this.global_rooms_list[room_name])
 				}
-				io.in(room_name).emit("a_player_left", this.exit_user_msg(room_name, player_name, master_is_leaving));
+				if (this.global_rooms_list[room_name] != undefined)
+				{
+					io.in(room_name).emit("a_player_left", this.exit_user_msg(room_name, player_name, master_is_leaving));
+				}
 			}
 		}
 	}
