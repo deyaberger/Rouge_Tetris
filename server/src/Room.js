@@ -1,4 +1,6 @@
-const { Player } = require("./Player.js")
+const { Player } = require("./Player.js");
+const seedrandom = require('seedrandom');
+
 
 class Room {
 	constructor(name) {
@@ -6,6 +8,8 @@ class Room {
 		this.master = null;
 		this.game_on = false;
 		this.players_list = {};
+		this.generator = seedrandom(Math.random());
+		this.winner = null;
 	}
 
 	get_other_player_spectres(ID) {
@@ -27,9 +31,9 @@ class Room {
 			"room_name" : this.name,
 			"player_name" : player.name,
 			"master" : this.master,
-			"winner" : null,
-			"tetris" : player.game.background, // ! TO BE ADDED
-			"spectres" : this.get_spectres(ID)
+			"winner" : this.winner,
+			"tetris" : player.game.get_tetris(), // ! TO BE ADDED
+			"spectres" : this.get_other_player_spectres(ID)
 		}
 	}
   }
@@ -109,7 +113,7 @@ class RoomManager {
 			chaussette.emit("error", "sorry, this room is not available");
 			return;
 		}
-		const player = new Player(msg.player_name);
+		const player = new Player(msg.player_name, room.generator);
 		this.connect_room_player(room, player, chaussette.id);
 		chaussette.join(room.name); // ! TO BE CONTINUED !!
 		// chaussette.emit("success", this.success_msg(player, room)) 

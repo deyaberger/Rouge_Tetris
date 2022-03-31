@@ -1,10 +1,8 @@
-const {row, col, create_2d_array} = require("./utils")
-
+const { Game } = require("./Game")
 class Player {
-	constructor(name) {
+	constructor(name, generator) {
 		this.name = name;
-		// this.room_name = null;
-		// this.master = false;
+		this.game = new Game(generator);
 	}
 }
 
