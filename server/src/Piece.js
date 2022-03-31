@@ -11,16 +11,17 @@
 // ! }
 
 var { create_2d_array } = require("./utils")
+var _ = require('lodash');
 
 
 class Piece {
-	constructor(piece_nb, rotation) {
-		const three_matrix = [
+	letructor(piece_nb, rotation) {
+		let three_matrix = [
 			[(2, 0), (1, 0), (0, 0)],
 			[(2, 1), (1, 1), (0, 1)],
 			[(2, 2), (1, 2), (0, 2)]
 		];
-		const four_matrix = [
+		let four_matrix = [
 			[(3, 0), (2, 0), (1, 0), (0, 0)],
 			[(3, 1), (2, 1), (1, 1), (0, 1)],
 			[(3, 2), (2, 2), (1, 2), (0, 2)],
@@ -33,7 +34,6 @@ class Piece {
 			this.size = (4, 4);
 			this.rotation_matrix = four_matrix;
 		}
-		this.x = null;
 		if (piece_nb == 1) {
 			this.x = this.turquoise(1);
 		}
@@ -55,14 +55,14 @@ class Piece {
 		else if (piece_nb == 7) {
 			this.x = this.red(7);
 		}
-		this.x.rotate(rotation);
+		this.rotate(rotation);
 	}
 
 	rotate(rotation) {
 		if (this.piece_nb == 4) {
 			return;
 		}
-		const new_x = create_2d_array(this.size[0], this.size[1])
+		let new_x = create_2d_array(this.size[0], this.size[1])
 		for (let i = 0; i < _.range(this.size[0]); i++) {
 			for (let j = 0; j < _.range(this.size[1]); j++) {
 				var value = this.x[i][j];
@@ -70,67 +70,81 @@ class Piece {
 				new_x[k][l] = value;
 			}
 		}
-
-
+		this.x = new_x;
 	}
 
 	turquoise(v) {
-		const x = [   
+		let x = [   
 			[0, 0, 0, 0],
 			[v, v, v, v],
 			[0, 0, 0, 0],
 			[0, 0, 0, 0],
-		]
+		];
+		return x;
 	}
 
 	blue(v) {
-		const x = [
+		let x = [
 			[v, 0, 0]
 			[v, v, v]
 			[0, 0, 0]
-		]
+		];
+		console.log("HEY");
+		console.log(x);
+		return x;
 	}
 
 	orange(v) {
-		const x = [
+		let x = [
 			[0, 0, v]
 			[v, v, v]
 			[0, 0, 0]
 		]
+		return x;
 	}
 
 	yellow(v) {
-		const x = [   
+		let x = [   
 			[0, v, v, 0]
 			[0, v, v, 0]
 			[0, 0, 0, 0]
 			[0, 0, 0, 0]
 		]
+		return x;
 	}
 
 	green(v) {
-		const x = [   
+		let x = [   
 			[0, v, v]
 			[v, v, 0]
 			[0, 0, 0]
 		]
+		return x;
 	}
 
 	purple(v) {
-		const x = [
+		let x = [
 			[0, v, 0]
 			[v, v, v]
 			[0, 0, 0]
 		]
+		return x;
 	}
 
 	red(v) {
-		const x = [   
+		let x = [   
 			[v, v, 0]
 			[0, v, v]
 			[0, 0, 0]
 		]
+		return x;
 	}
 
-
 }
+
+var piece = new Piece(2, 1);
+console.log("PIECE:")
+for (let i = 0; i < piece.x.length; i++) {
+	console.log(piece.x[i]);
+	}
+// console.log(piece.x)
