@@ -36,6 +36,22 @@ class Room {
 		return state;
 	}
 
+	remove_player(socket) {
+		let master_is_leaving = false;
+		if (this.master == this.players_list[socket.id].name) {
+			master_is_leaving = true;
+		}
+		delete (this.players_list[socket.id]);
+		if (master_is_leaving == true) {
+			const next_key = Object.keys(this.players_list)[0];
+			this.master = null;
+			if (next_key != undefined) {
+				this.master = this.players_list[next_key].name;
+			}
+		}
+		socket.to(this.name).emit("a_player_left", true);
+	}
+
 }
 
 
@@ -55,9 +71,10 @@ class RoomManager {
 	
 	player_already_exists(name) {
 		for (var key in this.global_rooms_list) {
-			if (this.global_rooms_list.hasOwnProperty(key)) {   
-				const player_name = this.global_rooms_list[key]
-				if (player_name == name) {
+			const room = this.global_rooms_list[key];
+			for (var ID in room.players_list) {
+				const player = room.players_list[ID];
+				if (player != undefined && player.name == name) {
 					return true;
 				}
 			}
@@ -95,7 +112,7 @@ class RoomManager {
 			return;
 		}
 		const room = this.find_or_create_room(msg.room_name);
-		if (!this.is_room_available(room))
+		if (!this.is_room_available(room)) // ! TO TEST
 		{
 			chaussette.emit("error", "sorry, this room is not available");
 			return;
@@ -108,46 +125,10 @@ class RoomManager {
 		return room;
 	}
 
-	assign_new_master(room) {
-		const new_masters_name = Object.keys(room.players_list)[0];
-		room.master = new_masters_name;
-		room.players_list[new_masters_name].master = true;
+	remove_room(name) {
+		delete (this.global_rooms_list[name]);
 	}
-
-	exit_user_msg(room_name, player_name, master_is_leaving) {
-		const msg = {
-			"msg" : `player ${player_name} has left the room`,
-			"master_is_leaving" : master_is_leaving,
-			"masters_name" : this.global_rooms_list[room_name].master
-		}
-		return (msg);
-	}
-
-	remove_user(chaussette_id, io) {
-		// Need to be better written
-		if (this.socket_dict[chaussette_id] != undefined) {
-			const player_name = this.socket_dict[chaussette_id]["player"];
-			const room_name = this.socket_dict[chaussette_id]["room"];
-			let master_is_leaving = false;
-			if (player_name != undefined && room_name != undefined) {
-				if (player_name == this.global_rooms_list[room_name].master) {
-					master_is_leaving = true;
-				}
-				delete (this.global_rooms_list[room_name].players_list[player_name]);
-				delete (this.global_players_list[player_name]); // ! TO BE DELETED
-				if (Object.keys(this.global_rooms_list[room_name].players_list).length == 0) {
-					delete (this.global_rooms_list[room_name]);
-				}
-				else if (master_is_leaving == true) {
-					this.assign_new_master(this.global_rooms_list[room_name])
-				}
-				if (this.global_rooms_list[room_name] != undefined)
-				{
-					io.in(room_name).emit("a_player_left", this.exit_user_msg(room_name, player_name, master_is_leaving));
-				}
-			}
-		}
-	}
+	
 }
 
 

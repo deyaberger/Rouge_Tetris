@@ -20,7 +20,20 @@ io.on('connection', (socket) => {
 	var player = null;
 	socket.on('join_room', (msg) => {
 		room = room_manager.handle_socket_msg(msg, socket);
-		player = room.players_list[socket.id];
+		if (room != null) {
+			player = room.players_list[socket.id];
+			console.log(room_manager.global_rooms_list)
+		}
+	});
+
+	socket.on('disconnect', () => {
+		if (room != null) {
+			room.remove_player(socket); // Check if not better IO
+			if (room.master == null) {
+				room_manager.remove_room(room.name)
+			}
+			console.log(room_manager.global_rooms_list)
+		}
 	});
 
 
@@ -37,12 +50,7 @@ io.on('connection', (socket) => {
 // 	})
 
 
-// 	socket.on('disconnect', () => {
-// 		room_manager.remove_user(socket.id, io);
-// 		console.log('user disconnected');
-// 		console.log(room_manager.global_rooms_list);
-// 		console.log(room_manager.global_players_list);
-// 	  });
+
   });
 
 server.listen(3000, () => {
