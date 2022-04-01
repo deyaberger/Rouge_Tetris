@@ -1,31 +1,23 @@
-var { row, col, create_2d_array } = require("./utils")
+const seedrandom = require('seedrandom');
 
 class Game {
-	constructor(generator) {
-		this.generator = generator;
-		this.background = create_2d_array(row, col);
-		this.active_piece = null;
-		this.piece_position = null;
-		this.spectre = create_2d_array(row, col);
-	}
-	
-	get_tetris() {
-		return;
+	constructor() {
+		this.on = false;
+		this.winner = null;
+		this.generator = seedrandom(Math.random());
 	}
 
-	create_random_piece() {
-		return;
-	}
+	start(io, room) {
+		let i = 0;
+		setInterval(function scrolling(io, room)
+		{
+			if (this.winner != null) {
+				return;
+			}
+			io.in(room).emit("time_pass", true); // ! ADD STATE QUESTION ON CLIENT SIDE
 
-	does_it_fit(piece, piece_position) {
-		return;
-	}
-
-	add_to_backgound(piece, piece_position) {
-		return;
-	}
-
-	is_done(piece, piece_position) {
-
+		}, 1000, io, room);
 	}
 }
+
+module.exports = { Game }

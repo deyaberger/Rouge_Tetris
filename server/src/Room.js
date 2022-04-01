@@ -1,15 +1,13 @@
 const { Player } = require("./Player.js");
-const seedrandom = require('seedrandom');
+const { Game } = require("./Game.js");
 
 
 class Room {
 	constructor(name) {
 		this.name = name;
 		this.master = null;
-		this.game_on = false;
 		this.players_list = {};
-		this.generator = seedrandom(Math.random());
-		this.winner = null;
+		this.game = new Game();
 	}
 
 	get_other_player_spectres(ID) {
@@ -17,7 +15,7 @@ class Room {
 		if (Object.keys(this.players_list).length > 1) {
 			for (var key in this.players_list) {
 				if (key != ID) {
-					spectres[key] = this.players_list[key].spectre; // ! WERE SHOULD IT GO??
+					spectres[key] = this.players_list[key].tetris.spectre; // ! WERE SHOULD IT GO??
 				}
 			}
 		}
@@ -27,23 +25,24 @@ class Room {
 	get_state(ID) {
 		const player = this.players_list[ID];
 		const state = {
-			"game_on" : this.game_on,
+			"game_on" : this.game.on,
 			"room_name" : this.name,
 			"player_name" : player.name,
 			"master" : this.master,
-			"winner" : this.winner,
-			"tetris" : player.game.get_tetris(), // ! TO BE ADDED
+			"winner" : this.game.winner,
+			"tetris" : player.tetris.get_state(), // ! TO BE ADDED
 			"spectres" : this.get_other_player_spectres(ID)
 		}
+		return state;
 	}
-  }
+
+}
+
 
 
 class RoomManager {
 	constructor() {
 		this.global_rooms_list = {};
-		// this.global_players_list = {};
-		// this.socket_dict = {};
 		}
 	
 	find_or_create_room(room_name) {
@@ -56,7 +55,7 @@ class RoomManager {
 	
 	player_already_exists(name) {
 		for (var key in this.global_rooms_list) {
-			if (dictionary.hasOwnProperty(key)) {   
+			if (this.global_rooms_list.hasOwnProperty(key)) {   
 				const player_name = this.global_rooms_list[key]
 				if (player_name == name) {
 					return true;
@@ -68,38 +67,26 @@ class RoomManager {
 
 	is_room_available(room)
 	{
-		if (room.game_on == false) {
+		if (room.game.on == false) {
 			return true;
 		}
 		return false;
 	}
 
-	assign_master(room, player) {
-		room.master = player.name;
-	}
-
-	assign_player_to_room(player, room, chaussette_id) {
-		room.players_list[chaussette_id] = player;
-	}
-
-	add_room_to_list(room) {
-		this.global_rooms_list[room.name] = room;
-	}
-
 
 	connect_room_player(room, player, chaussette_id) {
 		if (room.master == null) {
-			this.assign_master(room, player);
+			room.master = player.name;
 		}
-		this.assign_player_to_room(player, room, chaussette_id);
-		this.add_room_to_list(room);
+		room.players_list[chaussette_id] = player;
+		this.global_rooms_list[room.name] = room;
 	}
 
 
 	handle_socket_msg(msg, chaussette) {
 		if (msg.room_name == undefined || msg.player_name == undefined)
 		{
-			chaussette.emit("ERROR", "wrong format for join_room msg");
+			chaussette.emit("error", "wrong format for join_room msg");
 			return;
 		}
 		if (this.player_already_exists(msg.player_name))
@@ -113,11 +100,12 @@ class RoomManager {
 			chaussette.emit("error", "sorry, this room is not available");
 			return;
 		}
-		const player = new Player(msg.player_name, room.generator);
+		const player = new Player(msg.player_name, room.game.generator);
 		this.connect_room_player(room, player, chaussette.id);
-		chaussette.join(room.name); // ! TO BE CONTINUED !!
-		// chaussette.emit("success", this.success_msg(player, room)) 
-		// chaussette.to(room.name).emit("new_player", this.new_player_msg(player))
+		chaussette.join(room.name);
+		chaussette.emit("game_state", room.get_state(chaussette.id))
+		chaussette.to(room.name).emit("new_player", true) // ! ADD STATE QUESTION ON CLIENT SIDE
+		return room;
 	}
 
 	assign_new_master(room) {

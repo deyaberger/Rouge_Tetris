@@ -1,8 +1,10 @@
-const { Game } = require("./Game")
+const { Tetris } = require("./Tetris")
+
+
 class Player {
 	constructor(name, generator) {
 		this.name = name;
-		this.game = new Game(generator);
+		this.tetris = new Tetris(generator);
 	}
 }
 

@@ -11,22 +11,21 @@
 // ! }
 
 var { create_2d_array } = require("./utils")
-var _ = require('lodash');
 
+let three_matrix = [
+	[[0, 2], [1, 2], [2, 2]],
+	[[0, 1], [1, 1], [2, 1]],
+	[[0, 0], [1, 0], [2, 0]]
+];
+let four_matrix = [
+	[[0, 3], [1, 3], [2, 3], [3, 3]],
+	[[0, 2], [1, 2], [2, 2], [3, 2]],
+	[[0, 1], [1, 1], [2, 1], [3, 1]],
+	[[0, 0], [1, 0], [2, 0], [3, 0]]
+] 
 
 class Piece {
 	constructor(piece_nb, rotation) {
-		let three_matrix = [
-			[[0, 2], [1, 2], [2, 2]],
-			[[0, 1], [1, 1], [2, 1]],
-			[[0, 0], [1, 0], [2, 0]]
-		];
-		let four_matrix = [
-			[[0, 3], [1, 3], [2, 3], [3, 3]],
-			[[0, 2], [1, 2], [2, 2], [3, 2]],
-			[[0, 1], [1, 1], [2, 1], [3, 1]],
-			[[0, 0], [1, 0], [2, 0], [3, 0]]
-		] 
 		this.piece_nb = piece_nb;
 		this.rotation = rotation;
 		this.size = [3, 3];
@@ -56,10 +55,6 @@ class Piece {
 		else if (piece_nb == 7) {
 			this.x = this.red(7);
 		}
-		console.log("PIECE BEFORE:")
-		for (let i = 0; i < this.size[0]; i++) {
-			console.log(this.x[i]);
-		}
 		this.rotate(rotation);
 	}
 
@@ -81,7 +76,6 @@ class Piece {
 			return;
 		}
 		for (let index = 0; index < rotation; index++) {
-			console.log("HEY");
 			this.single_rotation();
 		}
 	}
@@ -102,8 +96,6 @@ class Piece {
 			[v, v, v],
 			[0, 0, 0]
 		];
-		console.log("X:");
-		console.log(x);
 		return x;
 	}
 
@@ -155,9 +147,4 @@ class Piece {
 
 }
 
-var piece = new Piece(7, 3);
-console.log("PIECE AFTER:")
-for (let i = 0; i < piece.size[0]; i++) {
-	console.log(piece.x[i]);
-	}
-// console.log(piece)
+module.exports = { Piece }
