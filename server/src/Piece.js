@@ -15,23 +15,24 @@ var _ = require('lodash');
 
 
 class Piece {
-	letructor(piece_nb, rotation) {
+	constructor(piece_nb, rotation) {
 		let three_matrix = [
-			[(2, 0), (1, 0), (0, 0)],
-			[(2, 1), (1, 1), (0, 1)],
-			[(2, 2), (1, 2), (0, 2)]
+			[[0, 2], [1, 2], [2, 2]],
+			[[0, 1], [1, 1], [2, 1]],
+			[[0, 0], [1, 0], [2, 0]]
 		];
 		let four_matrix = [
-			[(3, 0), (2, 0), (1, 0), (0, 0)],
-			[(3, 1), (2, 1), (1, 1), (0, 1)],
-			[(3, 2), (2, 2), (1, 2), (0, 2)],
-			[(3, 3), (2, 3), (1, 3), (0, 3)]
+			[[0, 3], [1, 3], [2, 3], [3, 3]],
+			[[0, 2], [1, 2], [2, 2], [3, 2]],
+			[[0, 1], [1, 1], [2, 1], [3, 1]],
+			[[0, 0], [1, 0], [2, 0], [3, 0]]
 		] 
 		this.piece_nb = piece_nb;
-		this.size = (3, 3);
+		this.rotation = rotation;
+		this.size = [3, 3];
 		this.rotation_matrix = three_matrix;
 		if (piece_nb == 1 || piece_nb == 4) {
-			this.size = (4, 4);
+			this.size = [4, 4];
 			this.rotation_matrix = four_matrix;
 		}
 		if (piece_nb == 1) {
@@ -55,22 +56,34 @@ class Piece {
 		else if (piece_nb == 7) {
 			this.x = this.red(7);
 		}
+		console.log("PIECE BEFORE:")
+		for (let i = 0; i < this.size[0]; i++) {
+			console.log(this.x[i]);
+		}
 		this.rotate(rotation);
 	}
 
-	rotate(rotation) {
-		if (this.piece_nb == 4) {
-			return;
-		}
-		let new_x = create_2d_array(this.size[0], this.size[1])
-		for (let i = 0; i < _.range(this.size[0]); i++) {
-			for (let j = 0; j < _.range(this.size[1]); j++) {
+	single_rotation() {
+		let new_x = create_2d_array(this.size[0], this.size[1]);
+		for (let i = 0; i < this.size[0]; i++) {
+			for (let j = 0; j < this.size[1]; j++) {
 				var value = this.x[i][j];
-				var {k, l} = this.rotation_matrix[i][j];
+				var k = this.rotation_matrix[i][j][0];
+				var l = this.rotation_matrix[i][j][1];
 				new_x[k][l] = value;
 			}
-		}
+		};
 		this.x = new_x;
+	}
+
+	rotate(rotation) {
+		if (this.piece_nb == 4 || rotation == 0) {
+			return;
+		}
+		for (let index = 0; index < rotation; index++) {
+			console.log("HEY");
+			this.single_rotation();
+		}
 	}
 
 	turquoise(v) {
@@ -78,26 +91,26 @@ class Piece {
 			[0, 0, 0, 0],
 			[v, v, v, v],
 			[0, 0, 0, 0],
-			[0, 0, 0, 0],
+			[0, 0, 0, 0]
 		];
 		return x;
 	}
 
 	blue(v) {
 		let x = [
-			[v, 0, 0]
-			[v, v, v]
+			[v, 0, 0],
+			[v, v, v],
 			[0, 0, 0]
 		];
-		console.log("HEY");
+		console.log("X:");
 		console.log(x);
 		return x;
 	}
 
 	orange(v) {
 		let x = [
-			[0, 0, v]
-			[v, v, v]
+			[0, 0, v],
+			[v, v, v],
 			[0, 0, 0]
 		]
 		return x;
@@ -105,9 +118,9 @@ class Piece {
 
 	yellow(v) {
 		let x = [   
-			[0, v, v, 0]
-			[0, v, v, 0]
-			[0, 0, 0, 0]
+			[0, v, v, 0],
+			[0, v, v, 0],
+			[0, 0, 0, 0],
 			[0, 0, 0, 0]
 		]
 		return x;
@@ -115,8 +128,8 @@ class Piece {
 
 	green(v) {
 		let x = [   
-			[0, v, v]
-			[v, v, 0]
+			[0, v, v],
+			[v, v, 0],
 			[0, 0, 0]
 		]
 		return x;
@@ -124,8 +137,8 @@ class Piece {
 
 	purple(v) {
 		let x = [
-			[0, v, 0]
-			[v, v, v]
+			[0, v, 0],
+			[v, v, v],
 			[0, 0, 0]
 		]
 		return x;
@@ -133,8 +146,8 @@ class Piece {
 
 	red(v) {
 		let x = [   
-			[v, v, 0]
-			[0, v, v]
+			[v, v, 0],
+			[0, v, v],
 			[0, 0, 0]
 		]
 		return x;
@@ -142,9 +155,9 @@ class Piece {
 
 }
 
-var piece = new Piece(2, 1);
-console.log("PIECE:")
-for (let i = 0; i < piece.x.length; i++) {
+var piece = new Piece(7, 3);
+console.log("PIECE AFTER:")
+for (let i = 0; i < piece.size[0]; i++) {
 	console.log(piece.x[i]);
 	}
-// console.log(piece.x)
+// console.log(piece)
