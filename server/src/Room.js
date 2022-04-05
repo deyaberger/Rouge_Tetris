@@ -1,5 +1,7 @@
 const { Player } = require("./Player.js");
 const { Game } = require("./Game.js");
+const { col } = require("./utils.js");
+const e = require("express");
 
 
 class Room {
@@ -7,7 +9,7 @@ class Room {
 		this.name = name;
 		this.master = null;
 		this.players_list = {};
-		this.game = new Game();
+		this.game = new Game(this.players_list);
 	}
 
 	get_other_player_spectres(ID) {
@@ -36,6 +38,7 @@ class Room {
 		return state;
 	}
 
+
 	remove_player(socket) {
 		let master_is_leaving = false;
 		if (this.master == this.players_list[socket.id].name) {
@@ -49,7 +52,7 @@ class Room {
 				this.master = this.players_list[next_key].name;
 			}
 		}
-		socket.to(this.name).emit("a_player_left", true);
+		socket.to(this.name).emit("a_player_left", true); // ! TO BE HANDLED ON CLIENT SIDE
 	}
 
 }

@@ -10,10 +10,12 @@
   "dependencies": {
     "core-js": "^3.8.3",
     "express": "^4.17.3",
+    "mocha": "^9.2.2",
     "nodemon": "^2.0.15",
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1",
-    "vue": "^3.2.13"
+    "vue": "^3.2.13",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -37,8 +39,8 @@
       "parser": "@babel/eslint-parser"
     },
     "rules": {
-		"no-unused-vars": "off"
-	  }
+      "no-unused-vars": "off"
+    }
   },
   "browserslist": [
     "> 1%",

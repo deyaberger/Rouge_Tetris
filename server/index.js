@@ -26,6 +26,18 @@ io.on('connection', (socket) => {
 		}
 	});
 
+	socket.on('start', (msg) => {
+		if (room != null && room.master == player.name) {
+			room.game.on = true;
+		room.game.start(io, room.name); }
+	})
+
+	socket.on('stop', (msg) => {
+		if (room != null) {
+			room.game.stop();
+		}
+	})
+
 	socket.on('disconnect', () => {
 		if (room != null) {
 			room.remove_player(socket); // Check if not better IO
@@ -57,8 +69,3 @@ server.listen(3000, () => {
   console.log('listening on *:3000');
 });
 
-// const seedrandom = require('seedrandom');
-// const generator = seedrandom(10);
-// for (let index = 0; index < 10; index++) {
-// 	console.log("tetris nb: " + Math.round(generator() * 10) + 1 + ", rotation: " + Math.round(generator() * 10) % 4 + ", position: (" + Math.round(generator() * 10) + ",  " + Math.round(generator() * 10) + ")");
-// }
