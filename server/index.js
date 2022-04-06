@@ -32,6 +32,14 @@ io.on('connection', (socket) => {
 		room.game.start(io, room.name); }
 	})
 
+	socket.on('move', (msg) => {
+		if (room != null && player != null) {
+			player.tetris.apply_move(msg);
+			// room
+		}
+
+	})
+
 	socket.on('stop', (msg) => {
 		if (room != null) {
 			room.game.stop();
