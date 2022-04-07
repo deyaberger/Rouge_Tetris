@@ -11,9 +11,9 @@ class Tetris {
 	}
 
 	get_state() {
-		const state = create_2d_array(row, col);
-		for (let i = 0; i < row; i++) {
-			for (let j = 0; j < col; j++) {
+		const state = create_2d_array(max_row, max_col);
+		for (let i = 0; i < max_row; i++) {
+			for (let j = 0; j < max_col; j++) {
 				state[i][j] = this.background[i][j];
 			}
 			const element = array[i];
