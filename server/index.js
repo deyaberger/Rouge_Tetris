@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
 	socket.on('move', (msg) => {
 		if (room != null && player != null) {
 			player.tetris.apply_move(msg);
-			// room
+			socket.emit("game_state", room.get_state(socket.id));
 		}
 
 	})
