@@ -12,6 +12,23 @@ class Tetris {
 		this.spectre = create_2d_array(this.max_row, this.max_col);
 	}
 
+	update_spectre() {
+		for (let j = 0; j < this.max_col; j++) {
+			let quickest_touch = false;
+			for (let i = 0; i < this.max_row; i++) {
+				if (this.background[i][j] != 0 || quickest_touch == true) {
+					quickest_touch = true;
+					this.spectre[i][j] = 1;
+				}
+			}
+		}
+		console.log("UPDATING SPECTRE:");
+		for (let i = 0; i < this.max_row; i++) {
+			console.log(`${this.spectre[i]}`);
+			
+		}
+	}
+
 	get_state() {
 		if (this.active_piece == null || this.piece_position == null) {
 			return this.background;
@@ -146,6 +163,7 @@ class Tetris {
 		}
 		if (this.is_it_stuck(this.active_piece, this.piece_position)) {
 			this.add_to_backgound(this.active_piece, this.piece_position);
+			this.update_spectre();
 			console.log("adding to background and setting all to null")
 			this.active_piece = null;
 			this.piece_position = null;
