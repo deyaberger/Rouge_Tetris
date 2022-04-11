@@ -13,7 +13,7 @@ class Tetris {
 	}
 
 	get_state() {
-		if (this.active_piece == null) {
+		if (this.active_piece == null || this.piece_position == null) {
 			return this.background;
 		}
 		let k = this.piece_position[0] == -1 ? 0 : this.piece_position[0];
@@ -55,20 +55,18 @@ class Tetris {
 	does_it_fit(piece, piece_position) {
 		let row = piece_position[0];
 		let col = piece_position[1];
-		// console.log("DOES it fit PIECE:");
-		// console.log(piece.x);
 		for (let i = 0; i < piece.size[0]; i++) {
 			for (let j = 0; j < piece.size[1]; j++) {
 				let value = piece.x[i][j];
 				if(this.is_inside(row, col)) {
-					if (row > 0 && this.background[row][col] != 0) {
+					if (value != 0 && row > 0 && this.background[row][col] != 0) {
 						console.log("already occupied")
 						return false;
 					}
 				}
 				else if (value != 0) {
-						console.log("outside")
-						return false;
+					console.log("outside")
+					return false;
 				}
 				col += 1;
 			};
@@ -83,8 +81,10 @@ class Tetris {
 		let col = piece_position[1];
 		for (let i = 0; i < piece.size[0]; i++) {
 			for (let j = 0; j < piece.size[1]; j++) {
-				if (row > 0) {
-					this.background[row][col] = piece.x[i][j];
+				if (row >= 0 && row < this.max_row) {
+					if (piece.x[i][j] != 0) {
+						this.background[row][col] = piece.x[i][j];
+					}
 					col++;
 				}
 			}
@@ -96,10 +96,10 @@ class Tetris {
 
 	is_it_stuck(piece, piece_position) {
 		let new_position = [this.piece_position[0] + 1, this.piece_position[1]];
-		// console.log("dans is it stuck:")
 		if (this.does_it_fit(piece, new_position)) {
 			return false;
 		}
+		console.log("YES IT IS STUCK")
 		return true;
 	}
 
@@ -145,8 +145,9 @@ class Tetris {
 			}
 		}
 		if (this.is_it_stuck(this.active_piece, this.piece_position)) {
-			this.add_to_backgound();
-			this.active_piece == null;
+			this.add_to_backgound(this.active_piece, this.piece_position);
+			console.log("adding to background and setting all to null")
+			this.active_piece = null;
 			this.piece_position = null;
 		}
 

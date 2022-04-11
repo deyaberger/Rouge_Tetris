@@ -37,9 +37,8 @@ class Game {
 	}
 
 	start(io, room) {
-		let i = 0;
 		this.on = true;
-		this.interval = setInterval(() => this.scrolling(io, room), 1000);
+		this.interval = setInterval(() => this.scrolling(io, room), 500);
 		// this.interval = this.scrolling(io, room);
 	}
 
