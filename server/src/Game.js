@@ -8,16 +8,25 @@ class Game {
 		this.players_list = players_list;
 	}
 
+	print_state(tetris) {
+		let state = tetris.get_state();
+		for (let i = 0; i < tetris.max_row; i++) {
+			console.log(`\t${state[i]}`);
+		}
+	}
+
 	update_players_state() {
 		for (const player_id in this.players_list) {
 			if (Object.hasOwnProperty.call(this.players_list, player_id)) {
-				try {
+				// try {
 					const tetris = this.players_list[player_id].tetris;
+					console.log(`***************\n\n`)
 					tetris.apply_move("down");
-				  }
-				  catch (error) {
-					console.log("error");
-				  }
+					this.print_state(tetris);
+				//   }
+				//   catch (error) {
+					// console.log(`error: ${error}`);
+				//   }
 			}
 		}
 	}
@@ -30,8 +39,8 @@ class Game {
 	start(io, room) {
 		let i = 0;
 		this.on = true;
-		this.update_players_state();
 		this.interval = setInterval(() => this.scrolling(io, room), 1000);
+		// this.interval = this.scrolling(io, room);
 	}
 
 	stop() {
