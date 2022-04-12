@@ -25,9 +25,9 @@ let four_matrix = [
 ] 
 
 class Piece {
-	constructor(piece_nb, rotation) {
+	constructor(piece_nb, rotations) {
 		this.piece_nb = piece_nb;
-		this.rotation = rotation;
+		this.rotations = rotations % 4;
 		this.size = [3, 3];
 		this.rotation_matrix = three_matrix;
 		if (piece_nb == 1 || piece_nb == 4) {
@@ -55,28 +55,27 @@ class Piece {
 		else if (piece_nb == 7) {
 			this.x = this.red(7);
 		}
-		this.rotate(rotation);
+		console.log("ROTATING while creating new piece")
+		this.rotate(rotations);
 	}
 
-	single_rotation() {
-		let new_x = create_2d_array(this.size[0], this.size[1]);
-		for (let i = 0; i < this.size[0]; i++) {
-			for (let j = 0; j < this.size[1]; j++) {
-				var value = this.x[i][j];
-				var k = this.rotation_matrix[i][j][0];
-				var l = this.rotation_matrix[i][j][1];
-				new_x[k][l] = value;
-			}
-		};
-		this.x = new_x;
-	}
-
-	rotate(rotation) {
-		if (this.piece_nb == 4 || rotation == 0) {
+	rotate(rotations) {
+		if (this.piece_nb == 4 || rotations == 0) {
 			return;
 		}
-		for (let index = 0; index < rotation; index++) {
-			this.single_rotation();
+		for (let i = 0; i < rotations; i++) {
+			let new_x = create_2d_array(this.size[0], this.size[1]);
+			for (let i = 0; i < this.size[0]; i++) {
+				for (let j = 0; j < this.size[1]; j++) {
+					var value = this.x[i][j];
+					var k = this.rotation_matrix[i][j][0];
+					var l = this.rotation_matrix[i][j][1];
+					new_x[k][l] = value;
+				}
+			};
+			this.x = new_x;
+			this.rotations = (this.rotations + 1) % 4;
+			console.log("rotation nb = " + rotations);
 		}
 	}
 

@@ -15,31 +15,32 @@ class Game {
 		}
 	}
 
-	update_players_state() {
+
+	update_players_state (io, room) {
+		let active_player = false;
 		for (const player_id in this.players_list) {
 			if (Object.hasOwnProperty.call(this.players_list, player_id)) {
-				// try {
+				const player = this.players_list[player_id];
+				if (player.lost != true){
+					active_player = true;
 					const tetris = this.players_list[player_id].tetris;
-					console.log(`***************\n\n`)
-					tetris.apply_move("down");
+					if (tetris.apply_move("time") == false) {
+						this.players_list[player_id].lost = true;
+					}
 					this.print_state(tetris);
-				//   }
-				//   catch (error) {
-					// console.log(`error: ${error}`);
-				//   }
+					io.to(player_id).emit("game_state", room.get_state(player_id));
+				}
 			}
 		}
-	}
-
-	scrolling (io, room) {
-		this.update_players_state();
-		io.in(room).emit("time_pass", true); // ! ADD STATE QUESTION ON CLIENT SIDE
+		if (active_player == false) {
+			console.log("END OF GAME");
+			this.stop();
+		}
 	}
 
 	start(io, room) {
 		this.on = true;
-		this.interval = setInterval(() => this.scrolling(io, room), 100);
-		// this.interval = this.scrolling(io, room);
+		this.interval = setInterval(() => this.update_players_state(io, room), 1000);
 	}
 
 	stop() {

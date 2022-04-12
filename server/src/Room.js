@@ -30,6 +30,7 @@ class Room {
 			"game_on" : this.game.on,
 			"room_name" : this.name,
 			"player_name" : player.name,
+			"player_has_lost" : player.lost,
 			"master" : this.master,
 			"winner" : this.game.winner,
 			"tetris" : player.tetris.get_state(), // ! TO BE ADDED

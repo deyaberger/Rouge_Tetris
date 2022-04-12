@@ -7,4 +7,14 @@ function create_2d_array(row, col) {
 	return (x);
 }
 
-module.exports = {max_row, max_col, create_2d_array};
+function copy_array(array, row, col) {
+	let new_array = create_2d_array(row, col);
+	for (let i = 0; i < array.length; i++) {
+		for (let j = 0; j < array[i].length; j++) {
+			new_array[i][j] = array[i][j];
+		}
+	}
+	return new_array;
+}
+
+module.exports = {max_row, max_col, create_2d_array, copy_array};

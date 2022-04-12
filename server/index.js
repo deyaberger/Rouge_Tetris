@@ -29,11 +29,11 @@ io.on('connection', (socket) => {
 	socket.on('start', (msg) => {
 		if (room != null && room.master == player.name) {
 			room.game.on = true;
-		room.game.start(io, room.name); }
+		room.game.start(io, room); }
 	})
 
 	socket.on('move', (msg) => {
-		if (room != null && player != null) {
+		if (room != null && player != null && room.game.on == true) {
 			player.tetris.apply_move(msg);
 			socket.emit("game_state", room.get_state(socket.id));
 		}

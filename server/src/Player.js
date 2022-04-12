@@ -5,6 +5,7 @@ class Player {
 	constructor(name, generator) {
 		this.name = name;
 		this.tetris = new Tetris(generator);
+		this.lost = false;
 	}
 }
 
