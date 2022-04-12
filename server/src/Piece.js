@@ -27,7 +27,7 @@ let four_matrix = [
 class Piece {
 	constructor(piece_nb, rotations) {
 		this.piece_nb = piece_nb;
-		this.rotations = rotations % 4;
+		this.rotation_nb = 0;
 		this.size = [3, 3];
 		this.rotation_matrix = three_matrix;
 		if (piece_nb == 1 || piece_nb == 4) {
@@ -55,12 +55,11 @@ class Piece {
 		else if (piece_nb == 7) {
 			this.x = this.red(7);
 		}
-		console.log("ROTATING while creating new piece")
 		this.rotate(rotations);
 	}
 
 	rotate(rotations) {
-		if (this.piece_nb == 4 || rotations == 0) {
+		if (this.piece_nb == 4) {
 			return;
 		}
 		for (let i = 0; i < rotations; i++) {
@@ -74,9 +73,8 @@ class Piece {
 				}
 			};
 			this.x = new_x;
-			this.rotations = (this.rotations + 1) % 4;
-			console.log("rotation nb = " + rotations);
 		}
+		this.rotation_nb = (this.rotation_nb + rotations) % 4;
 	}
 
 	turquoise(v) {
