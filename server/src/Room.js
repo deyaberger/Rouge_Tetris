@@ -17,7 +17,7 @@ class Room {
 		if (Object.keys(this.players_list).length > 1) {
 			for (var key in this.players_list) {
 				if (key != ID) {
-					spectres[key] = this.players_list[key].tetris.spectre; // ! WERE SHOULD IT GO??
+					spectres[this.players_list[key].name] = this.players_list[key].tetris.spectre; // ! WERE SHOULD IT GO??
 				}
 			}
 		}
@@ -33,7 +33,7 @@ class Room {
 			"player_has_lost" : player.lost,
 			"master" : this.master,
 			"winner" : this.game.winner,
-			"tetris" : player.tetris.get_state(), // ! TO BE ADDED
+			"tetris" : player.tetris.get_state(),
 			"spectres" : this.get_other_player_spectres(ID)
 		}
 		return state;
