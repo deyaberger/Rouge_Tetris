@@ -10,7 +10,6 @@ class Tetris {
 		this.active_piece = null;
 		this.piece_position = null;
 		this.spectre = create_2d_array(this.max_row, this.max_col);
-		this.end_of_game = false;
 	}
 
 	update_spectre() {
@@ -105,7 +104,6 @@ class Tetris {
 		let piece_position = [-1, 3]; 
 		if (!this.does_it_fit(piece, piece_position)){
 			console.log("Can't fit new piece: --> END OF GAME");
-			this.end_of_game = true;
 			return false;
 		}
 		this.active_piece = piece;

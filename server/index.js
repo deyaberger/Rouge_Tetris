@@ -41,8 +41,14 @@ io.on('connection', (socket) => {
 	})
 
 	socket.on('stop', (msg) => {
-		if (room != null) {
-			room.game.stop();
+		if (room != null && room.game.on == true) {
+			room.game.stop(io, room);
+		}
+	})
+
+	socket.on('restart', (msg) => {
+		if (room != null && room.game.on == false) {
+			room.game.restart(io, room);
 		}
 	})
 
@@ -55,23 +61,7 @@ io.on('connection', (socket) => {
 			console.log(room_manager.global_rooms_list)
 		}
 	});
-
-
-
-// 	var game = null
-// 	socket.on("start", (msg) => {
-// 		game = room.start()
-// 		emit("game_state", room.get_state(ID))
-// 	})
-
-// 	socket.on("action", (msg) => {
-// 		game.do_action(msg, playerID)
-// 		emit("game_state", room.get_state())
-// 	})
-
-
-
-  });
+});
 
 server.listen(3000, () => {
   console.log('listening on *:3000');
