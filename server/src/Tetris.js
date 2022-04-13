@@ -10,6 +10,13 @@ class Tetris {
 		this.active_piece = null;
 		this.piece_position = null;
 		this.spectre = create_2d_array(this.max_row, this.max_col);
+		this.rows_to_delete = [];
+		this.rows_to_block = [];
+	}
+
+	clean() {
+		this.rows_to_delete = [];
+		this.rows_to_block = [];
 	}
 
 	update_spectre() {
@@ -21,10 +28,6 @@ class Tetris {
 					this.spectre[i][j] = 1;
 				}
 			}
-		}
-		console.log("UPDATING SPECTRE:");
-		for (let i = 0; i < this.max_row; i++) {
-			console.log(`${this.spectre[i]}`);
 		}
 	}
 
@@ -70,10 +73,6 @@ class Tetris {
 		return true;
 	}
 
-	add_to_backgound() {
-		console.log("ADDING TO BACKGROUND");
-		this.add_piece_to_array(this.background, this.active_piece, this.piece_position);
-	}
 
 	add_piece_to_array(array, piece, position) {
 		for (let i = 0; i < piece.size[0]; i++) {
@@ -86,6 +85,70 @@ class Tetris {
 			}
 		}
 	}
+
+	check_full_rows() {
+		for (let i = 0; i < this.active_piece.size[0]; i++) {
+			for (let j = 0; j < this.active_piece.size[1]; j++) {
+				let holes_in_line = false;
+				let piece_value = this.active_piece.x[i][j];
+				if (this.piece_position[0] + i >= 0 && piece_value != 0 && piece_value != -1) {
+					for (let k = 0; k < this.max_col; k++) {
+						let BK = this.background[this.piece_position[0] + i][k];
+						if (BK == 0 || BK == -1) {
+							holes_in_line = true;
+							break;
+						}
+					}
+					if (holes_in_line == false) {
+						this.rows_to_delete.push(this.piece_position[0] + i);
+						console.log(`A ROW IS FULL: ${this.rows_to_delete}`);
+						break;
+					}
+				}
+				break;
+			}
+		}
+	}
+
+	block(rows_to_block) {
+		this.rows_to_block = rows_to_block;
+		for (let index = 0; index < this.rows_to_block.length; index++) {
+			const row = this.rows_to_block[index];
+			for (let j = 0; j < this.max_col; j++) {
+				this.background[row][j] = -1;
+			}
+			
+		}
+		console.log("BLOCKING ROWS TO BE HANDLED");
+	}
+
+	delete_row() {
+		let full = 0
+		let new_background = create_2d_array(this.max_row, this.max_col);
+		for (let i = this.max_row - 1; i >= 0; i--) {
+			if (full == this.rows_to_delete.length || (full < this.rows_to_delete.length && i != this.rows_to_delete[full])) {
+				for (let j = 0; j < this.max_col; j++) {
+					new_background[i + full][j] = this.background[i][j];
+				}					
+			}
+			if (full < this.rows_to_delete.length && i == this.rows_to_delete[full]) {
+				full++;
+			}
+		}
+		this.background = new_background;
+	}
+
+	add_to_backgound() {
+		console.log("ADDING TO BACKGROUND");
+		this.add_piece_to_array(this.background, this.active_piece, this.piece_position);
+		this.check_full_rows()
+		if (this.rows_to_delete != [])
+		{
+			this.delete_row();
+			console.log("row full, do something");
+		}
+	}
+
 
 	get_state() {
 		let state = copy_array(this.background, this.max_row, this.max_col);

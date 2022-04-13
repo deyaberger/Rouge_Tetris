@@ -31,6 +31,8 @@ class Room {
 			"room_name" : this.name,
 			"player_name" : player.name,
 			"player_has_lost" : player.lost,
+			"rows_about_to_disappear" : player.tetris.rows_to_delete,
+			"rows_about_to_be_blocked" : player.tetris.rows_to_block,
 			"master" : this.master,
 			"winner" : this.game.winner,
 			"tetris" : player.tetris.get_state(),

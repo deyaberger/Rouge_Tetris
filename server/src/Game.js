@@ -13,9 +13,32 @@ class Game {
 	print_state(tetris) {
 		let state = tetris.get_state();
 		for (let i = 0; i < tetris.max_row; i++) {
-			console.log(`\t${state[i]}`);
+			for (let j = 0; j < tetris.max_col; j++) {
+				if (state[i][j] != 0 && state[i][j] != -1) {
+					process.stdout.write(`\x1b[33m ${state[i][j]} \x1b[0m`);
+				}
+				else if (state[i][j] == -1) {
+					process.stdout.write(`\x1b[37m${state[i][j]} \x1b[0m`);
+				}
+				else {
+					process.stdout.write(` ${state[i][j]} `);
+				}
+			}
+			console.log("");
 		}
 	}
+
+	block_other_players_rows(rows_to_block, who_did_zat) {
+		for (const player_id in this.players_list) {
+			if (Object.hasOwnProperty.call(this.players_list, player_id)) {
+				if (player_id != who_did_zat) {
+					const tetris = this.players_list[player_id].tetris;
+					tetris.block(rows_to_block);
+				}
+			}
+		}
+	}
+
 
 
 	update_players_state (io, room) {
@@ -28,8 +51,14 @@ class Game {
 					active_player_nb += 1;
 					active_player_id = player_id;
 					const tetris = this.players_list[player_id].tetris;
+					tetris.clean();
 					if (tetris.apply_move("time") == false) {
 						this.players_list[player_id].lost = true;
+					}
+					if (tetris.rows_to_delete.length != 0) {
+						console.log("rows to delete length:")
+						console.log(tetris.rows_to_delete.length);
+						this.block_other_players_rows(tetris.rows_to_delete, player_id);
 					}
 					this.print_state(tetris);
 					io.to(player_id).emit("game_state", room.get_state(player_id));
