@@ -91,6 +91,29 @@ class Tetris {
 			for (let j = 0; j < this.active_piece.size[1]; j++) {
 				let holes_in_line = false;
 				let piece_value = this.active_piece.x[i][j];
+				if (this.piece_position[0] + i >= 0 && this.piece_position[0] + 1 < this.max_row && piece_value != 0 && piece_value != -1) {
+					for (let k = 0; k < this.max_col; k++) {
+						let BK = this.background[this.piece_position[0] + i][k];
+						if (BK == 0 || BK == -1) {
+							holes_in_line = true;
+							break;
+						}
+					}
+					if (holes_in_line == false) {
+						this.rows_to_delete.push(this.piece_position[0] + i);
+						console.log(`A ROW IS FULL: ${this.rows_to_delete}`);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	check_full_rows2() {
+		for (let i = 0; i < this.active_piece.size[0]; i++) {
+			for (let j = 0; j < this.active_piece.size[1]; j++) {
+				let holes_in_line = false;
+				let piece_value = this.active_piece.x[i][j];
 				if (this.piece_position[0] + i >= 0 && piece_value != 0 && piece_value != -1) {
 					for (let k = 0; k < this.max_col; k++) {
 						let BK = this.background[this.piece_position[0] + i][k];
