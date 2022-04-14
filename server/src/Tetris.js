@@ -60,11 +60,10 @@ class Tetris {
 					continue;
 				}
 				else if (this.is_outside_sides(piece_position[0] + i, piece_position[1] + j)) {
-					console.log("outside");
 					return false;
 				}
 				let background_value = this.background[piece_position[0] + i][piece_position[1] + j];
-				if (background_value != 0) {
+				if (piece_value != 0 && background_value != 0) {
 					console.log("occupied");
 					return false;
 				}
@@ -101,7 +100,6 @@ class Tetris {
 					}
 					if (holes_in_line == false) {
 						this.rows_to_delete.push(this.piece_position[0] + i);
-						console.log(`A ROW IS FULL: ${this.rows_to_delete}`);
 						break;
 					}
 				}
@@ -109,29 +107,6 @@ class Tetris {
 		}
 	}
 
-	check_full_rows2() {
-		for (let i = 0; i < this.active_piece.size[0]; i++) {
-			for (let j = 0; j < this.active_piece.size[1]; j++) {
-				let holes_in_line = false;
-				let piece_value = this.active_piece.x[i][j];
-				if (this.piece_position[0] + i >= 0 && piece_value != 0 && piece_value != -1) {
-					for (let k = 0; k < this.max_col; k++) {
-						let BK = this.background[this.piece_position[0] + i][k];
-						if (BK == 0 || BK == -1) {
-							holes_in_line = true;
-							break;
-						}
-					}
-					if (holes_in_line == false) {
-						this.rows_to_delete.push(this.piece_position[0] + i);
-						console.log(`A ROW IS FULL: ${this.rows_to_delete}`);
-						break;
-					}
-				}
-				break;
-			}
-		}
-	}
 
 	block(rows_to_block) {
 		this.rows_to_block = rows_to_block;
@@ -162,13 +137,11 @@ class Tetris {
 	}
 
 	add_to_backgound() {
-		console.log("ADDING TO BACKGROUND");
 		this.add_piece_to_array(this.background, this.active_piece, this.piece_position);
 		this.check_full_rows();
 		if (this.rows_to_delete != [])
 		{
 			this.delete_row();
-			console.log("row full, do something");
 		}
 	}
 
@@ -218,15 +191,15 @@ class Tetris {
 				new_position = [this.piece_position[0], this.piece_position[1] + 1];
 			}
 			else if (move == "rotate") {
-				console.log("ROTATING")
 				new_piece.rotate(1);
 			}
 			else if (move == "space") {
-				console.log("NOT HANDLED YET")
+				console.log("NOT HANDLED YET");
 			}
 			let result = this.does_it_fit(new_piece, new_position);
 			if (result == true)
 			{
+				console.log("YES IT FITS");
 				this.active_piece = new_piece;
 				this.piece_position = new_position;
 			}

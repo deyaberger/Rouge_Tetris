@@ -27,9 +27,23 @@ almost_full_with_fours[18] = [2, 0, 0, 4, 4, 4, 4, 0, 0, 3];
 almost_full_with_fours[19] = [2, 2, 2, 0, 0, 4, 4, 3, 3, 3];
 
 let full_line = create_2d_array(max_row, max_col);
-full_line[17] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 full_line[18] = [2, 0, 0, 4, 4, 4, 4, 0, 0, 3];
 full_line[19] = [2, 2, 2, 4, 4, 4, 4, 3, 3, 3];
+
+let after_delete = create_2d_array(max_row, max_col);
+after_delete[19] = [2, 0, 0, 4, 4, 4, 4, 0, 0, 3];
+
+let almost_several_lines = create_2d_array(max_row, max_col);
+almost_several_lines[15] = [2, 2, 0, 0, 0, 0, 0, 0, 0, 0];
+almost_several_lines[16] = [2, 6, 6, 6, 1, 1, 1, 1, 2, 0];
+almost_several_lines[17] = [2, 0, 6, 0, 7, 7, 0, 0, 2, 0];
+almost_several_lines[18] = [6, 6, 6, 4, 4, 7, 7, 2, 2, 0];
+almost_several_lines[19] = [0, 6, 0, 4, 4, 1, 1, 1, 1, 0];
+
+let after_delete_several = create_2d_array(max_row, max_col);
+after_delete_several[17] = [2, 2, 0, 0, 0, 0, 0, 0, 0, 0];
+after_delete_several[18] = [2, 0, 6, 0, 7, 7, 0, 0, 2, 0];
+after_delete_several[19] = [0, 6, 0, 4, 4, 1, 1, 1, 1, 0];
 
 // [
 // 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -80,7 +94,7 @@ describe('Tetris', function () {
 			assert.equal(JSON.stringify(orange_piece_init), JSON.stringify(tetris.get_state()));
 		});
 		it('should get good state with several pieces on', function () {
-			tetris.background = almost_full;
+			tetris.background = copy_array(almost_full, max_row, max_col);
 			tetris.active_piece = new Piece(4, 0);
 			tetris.piece_position = [17, 2];
 			assert.equal(JSON.stringify(tetris.get_state()), JSON.stringify(almost_full_with_fours))
@@ -99,6 +113,33 @@ describe('Tetris', function () {
 			tetris.check_full_rows();
 			assert.equal(JSON.stringify(tetris.rows_to_delete), "[19]");
 		});
+		it('should delete row', function () {
+			tetris.delete_row();
+			assert.equal(JSON.stringify(tetris.background), JSON.stringify(after_delete));
+		});
+		it('apply move down from start', function() {
+			tetris.clean();
+			tetris.background = copy_array(almost_full, max_row, max_col);
+			tetris.active_piece = new Piece(4, 0);
+			tetris.piece_position = [17, 2];
+			tetris.apply_move("down");
+			assert.equal(JSON.stringify(tetris.get_state()), JSON.stringify(full_line));
+		});
+		it('apply move time should delete row', function() {
+			tetris.apply_move("time");
+			assert.equal(JSON.stringify(tetris.rows_to_delete), "[19]");
+			assert.equal(JSON.stringify(tetris.background), JSON.stringify(after_delete));
+		});
+		it('delete several rows', function() {
+			tetris.clean();
+			tetris.background = copy_array(almost_several_lines, max_row, max_col);
+			tetris.active_piece = new Piece(1, 1);
+			tetris.piece_position = [17, 16];
+			tetris.apply_move("time");
+			assert.equal(JSON.stringify(tetris.rows_to_delete), "[18, 16]");
+			// assert.equal(JSON.stringify(tetris.background), JSON.stringify(after_delete_several));
+		});
+
 	});
 });
 
