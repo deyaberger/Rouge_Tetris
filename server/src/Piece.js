@@ -1,13 +1,27 @@
 // ! {
 // ! 	"blocked" 	: -1,
+
 // ! 	"empty" 	: 0,
-// ! 	"turquoise" : 1,
-// ! 	"blue" 		: 2,
-// ! 	"orange" 	: 3,
-// ! 	"yellow" 	: 4,
-// ! 	"green" 	: 5,
-// ! 	"purple" 	: 6,
-// ! 	"red" 		: 7
+
+// ! 	"turquoise" : 1  [v v v v]
+
+// ! 	"blue" 		: 2  [v . .]
+// !					 [v v v]
+
+// ! 	"orange" 	: 3  [. . v]
+// !					 [v v v]
+
+// ! 	"yellow" 	: 4  [v v]
+// !					 [v v]
+
+// ! 	"green" 	: 5  [  v v]
+// !					 [v v  ]
+
+// ! 	"purple" 	: 6  [  v  ]
+// !					 [v v v]
+
+// ! 	"red" 		: 7  [v v  ]
+// !					 [  v v]
 // ! }
 
 var { create_2d_array } = require("./utils")

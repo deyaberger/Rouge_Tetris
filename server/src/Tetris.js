@@ -14,6 +14,15 @@ class Tetris {
 		this.rows_to_block = [];
 	}
 
+	full_clean() {
+		this.background = create_2d_array(this.max_row, this.max_col);
+		this.active_piece = null;
+		this.piece_position = null;
+		this.spectre = create_2d_array(this.max_row, this.max_col);
+		this.rows_to_delete = [];
+		this.rows_to_block = [];
+	}
+
 	clean() {
 		this.rows_to_delete = [];
 		this.rows_to_block = [];
@@ -121,16 +130,17 @@ class Tetris {
 	}
 
 	delete_row() {
-		let full = 0
+		let length = this.rows_to_delete.length - 1;
+		let full = length;
 		let new_background = create_2d_array(this.max_row, this.max_col);
 		for (let i = this.max_row - 1; i >= 0; i--) {
-			if (full == this.rows_to_delete.length || (full < this.rows_to_delete.length && i != this.rows_to_delete[full])) {
+			if (i >= 0 && i != this.rows_to_delete[full]) {
 				for (let j = 0; j < this.max_col; j++) {
-					new_background[i + full][j] = this.background[i][j];
+					new_background[i + length - full][j] = this.background[i][j];
 				}					
 			}
-			if (full < this.rows_to_delete.length && i == this.rows_to_delete[full]) {
-				full++;
+			if (full >= 0 && i == this.rows_to_delete[full]) {
+				full--;
 			}
 		}
 		this.background = new_background;
@@ -199,7 +209,6 @@ class Tetris {
 			let result = this.does_it_fit(new_piece, new_position);
 			if (result == true)
 			{
-				console.log("YES IT FITS");
 				this.active_piece = new_piece;
 				this.piece_position = new_position;
 			}
@@ -211,6 +220,7 @@ class Tetris {
 				}
 			}
 		}
+		return true;
 	}
 }
 
