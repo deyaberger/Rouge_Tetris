@@ -73,7 +73,7 @@ class Tetris {
 				}
 				let background_value = this.background[piece_position[0] + i][piece_position[1] + j];
 				if (piece_value != 0 && background_value != 0) {
-					console.log("occupied");
+					// console.log("occupied");
 					return false;
 				}
 			}			
@@ -186,9 +186,10 @@ class Tetris {
 			if (this.generate_new_piece() == false) {
 				return false;
 			}
+			return true;
 		}
 		else {
-			console.log(`applying move ${move}`);
+			// console.log(`applying move ${move}`);
 			let new_position = this.piece_position;
 			let new_piece = new Piece(this.active_piece.piece_nb, this.active_piece.rotation_nb);
 			if (move == "down" || move == "time") {
@@ -211,7 +212,8 @@ class Tetris {
 			{
 				this.active_piece = new_piece;
 				this.piece_position = new_position;
-			}
+				return true;
+			}		
 			else if (result == false && move == "time") {
 				this.add_to_backgound();
 				this.update_spectre();
@@ -219,8 +221,8 @@ class Tetris {
 					return false;
 				}
 			}
+			return false;
 		}
-		return true;
 	}
 }
 
