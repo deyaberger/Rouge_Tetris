@@ -1,11 +1,12 @@
+const seedrandom = require('seedrandom');
 let { Piece } = require("./Piece");
-var {create_2d_array, copy_array} = require("./utils")
+var {create_2d_array, copy_array} = require("./utils");
 
 class Tetris {
-	constructor(generator) {
+	constructor(seed) {
 		this.max_row = 20;
 		this.max_col = 10;
-		this.generator = generator;
+		this.generator = seedrandom(seed);
 		this.background = create_2d_array(this.max_row, this.max_col);
 		this.active_piece = null;
 		this.piece_position = null;
@@ -35,6 +36,9 @@ class Tetris {
 				if (this.background[i][j] != 0 || quickest_touch == true) {
 					quickest_touch = true;
 					this.spectre[i][j] = 1;
+				}
+				else {
+					this.spectre[i][j] = 0;
 				}
 			}
 		}
@@ -118,15 +122,15 @@ class Tetris {
 
 
 	block(rows_to_block) {
-		this.rows_to_block = rows_to_block;
+		for (var i = 0; i < rows_to_block.length; i++) {
+			this.rows_to_block.push(rows_to_block[i]);
+		}
 		for (let index = 0; index < this.rows_to_block.length; index++) {
 			const row = this.rows_to_block[index];
 			for (let j = 0; j < this.max_col; j++) {
 				this.background[row][j] = -1;
 			}
-			
 		}
-		console.log("BLOCKING ROWS TO BE HANDLED");
 	}
 
 	delete_row() {

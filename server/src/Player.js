@@ -2,9 +2,9 @@ const { Tetris } = require("./Tetris")
 
 
 class Player {
-	constructor(name, generator) {
+	constructor(name, seed) {
 		this.name = name;
-		this.tetris = new Tetris(generator);
+		this.tetris = new Tetris(seed);
 		this.lost = false;
 	}
 }

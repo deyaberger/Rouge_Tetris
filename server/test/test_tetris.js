@@ -20,7 +20,13 @@ const { empty_background,
 	almost_several_lines,
 	several_with_one,
 	after_delete_several,
-	applying_moves } = require("./test_utils");
+	applying_moves,
+	almost_the_end,
+	almost_the_end_with_six,
+	end_with_six,
+	almost_full_with_fours_spectrum,
+	after_delete_spectrum
+	} = require("./test_utils");
 
 describe('Tetris', function () {
 	describe('init', function () {
@@ -136,6 +142,38 @@ describe('Tetris', function () {
 			tetris.active_piece = new Piece(6, 1);
 			tetris.piece_position = [16, 7];
 			assert.isFalse(tetris.apply_move("rotate"));
+		});
+	});
+
+	describe('end of game', function () {
+		it ('One last piece before the end', function() {
+			tetris.full_clean();
+			tetris.background = copy_array(almost_the_end, max_row, max_col);
+			assert(tetris.apply_move("down"));
+			tetris.active_piece = new Piece(6, 0)
+			assert.equal(JSON.stringify(tetris.get_state()), JSON.stringify(almost_the_end_with_six));
+			tetris.apply_move("down");
+			tetris.apply_move("time");
+			assert.equal(JSON.stringify(tetris.background), JSON.stringify(end_with_six));
+		});
+	});
+
+	describe('spectre', function () {
+		it ('Check accuracy of spectrum', function() {
+			tetris.full_clean();
+			tetris.background = copy_array(almost_full_with_fours, max_row, max_col);
+			tetris.update_spectre();
+			assert.equal(JSON.stringify(tetris.spectre), JSON.stringify(almost_full_with_fours_spectrum));
+		});
+		it ('Check spectrum after row delete', function() {
+			tetris.full_clean();
+			tetris.background = copy_array(almost_full, max_row, max_col);
+			tetris.active_piece = new Piece(4, 0);
+			tetris.piece_position = [17, 2];
+			tetris.apply_move("down");
+			tetris.apply_move("time");
+			tetris.update_spectre();
+			assert.equal(JSON.stringify(tetris.spectre), JSON.stringify(after_delete_spectrum));
 		});
 	});
 });

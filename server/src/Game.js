@@ -1,4 +1,3 @@
-const seedrandom = require('seedrandom');
 const { Tetris } = require("./Tetris")
 
 
@@ -6,7 +5,7 @@ class Game {
 	constructor(players_list) {
 		this.on = false;
 		this.winner = null;
-		this.generator = seedrandom(Math.random());
+		this.seed = Math.random();
 		this.players_list = players_list;
 	}
 
@@ -41,7 +40,7 @@ class Game {
 
 
 
-	update_players_state (io, room) {
+	update_players_state (io, room, testing) {
 		let active_player_nb = 0;
 		let active_player_id = null;
 		for (const player_id in this.players_list) {
@@ -56,12 +55,12 @@ class Game {
 						this.players_list[player_id].lost = true;
 					}
 					if (tetris.rows_to_delete.length != 0) {
-						console.log("rows to delete length:")
-						console.log(tetris.rows_to_delete.length);
 						this.block_other_players_rows(tetris.rows_to_delete, player_id);
 					}
-					this.print_state(tetris);
-					io.to(player_id).emit("game_state", room.get_state(player_id));
+					// this.print_state(tetris);
+					if (testing != true) {
+						io.to(player_id).emit("game_state", room.get_state(player_id));
+					}
 				}
 			}
 		}
