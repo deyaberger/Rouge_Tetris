@@ -46,6 +46,15 @@ export default {
     };
   },
   computed: {
+    room() {
+      return this.$store.getters['game/getRoomName'];
+    },
+    player() {
+      return this.$store.getters['game/getPlayerName'];
+    },
+    isInGame() {
+      return (this.room.length > 0 && this.player.length > 0);
+    },
     isEmpty() {
       return this.playerName.length === 0 || this.roomName.length === 0;
     },
@@ -57,10 +66,17 @@ export default {
         room_name: this.roomName,
       };
       this.$socket.emit('join_room', msg);
-      this.$socket.on('game_state', (ret) => {
-        console.log('msgGamePage', ret);
-        this.$router.push(`/${this.roomName}/${this.playerName}`);
-      });
+    },
+  },
+  watch: {
+    isInGame: {
+      immediate: true,
+      handler(val) {
+        if (val) {
+          const gameRoute = `/${this.room}/${this.player}`;
+          this.$router.push(gameRoute);
+        }
+      },
     },
   },
 };

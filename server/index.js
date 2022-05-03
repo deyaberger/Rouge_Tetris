@@ -52,7 +52,7 @@ io.on('connection', (socket) => {
 		}
 	})
 
-	socket.on('disconnect', () => {
+	socket.on('quit', () => {
 		if (room != null) {
 			room.remove_player(socket); // Check if not better IO
 			if (room.master == null) {

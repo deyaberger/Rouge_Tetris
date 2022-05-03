@@ -38,67 +38,15 @@
 <script>
 export default {
   name: 'TetrisBoard',
-  data() {
-    return {
-      game_on: true,
-      room_name: '0001',
-      player_name: 'Lewis',
-      master: 'Lewis',
-      winner: null,
-      spectres: [],
-      tetris: [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 7, 7, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 7, 7, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [0, 4, 4, 0, 0, 0, 6, 6, 6, 1],
-        [2, 4, 4, 0, 0, 5, 5, 6, 3, 1],
-        [2, 2, 2, 0, 5, 5, 3, 3, 3, 1],
-        [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-      ],
-    };
-  },
   mounted() {
     // this.initTetris(this.tetris);
   },
-  methods: {
-    initTetris(tetris) {
-      // eslint-disable-next-line
-      tetris = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      ];
+  computed: {
+    tetris() {
+      return this.$store.getters['game/getTetris'];
     },
+  },
+  methods: {
     getColor(value) {
       return {
         blocked: value === -1,
@@ -115,36 +63,3 @@ export default {
   },
 };
 </script>
-
-// state : {
-  //     'game_on' : this.game.on,
-  //     'room_name' : this.name,
-  //     'player_name' : player.name,
-  //     'master' : this.master,
-  //     'winner' : this.game.winner,
-  //     'tetris' : player.tetris.get_state(),
-  //     'spectres' : this.get_other_player_spectres(ID),
-  //   }
-  // const state = {
-  //  "game_on" : boolean,
-  //  "room_name" : str ("ma_chambre"),
-  //  "player_name" : str ("deya"),
-  //  "master" : str ("deya"),
-  //  "winner" : null || str,
-  //  "tetris" : 2D array,
-  //  "spectres" : 2D array
-  // }
-  // 2D array for tetris:
-  // size: (row, col) = (20, 10)
-  // each value in array[i][j] indicates if there is a tetris or if it is empty or blocked
-  // {
-    // "blocked"    : -1,
-    // "empty"      : 0,
-    // "turquoise"  : 1,
-    // "blue"       : 2,
-    // "orange"     : 3,
-    // "yellow"     : 4,
-    // "green"      : 5,
-    // "purple"     : 6,
-    // "red"        : 7
-  // }

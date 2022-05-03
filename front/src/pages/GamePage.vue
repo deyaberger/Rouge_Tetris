@@ -1,8 +1,7 @@
 <template>
-  <q-page
-    style="min-height: 0px">
-    <div
-      v-if="gameOn"
+  <q-page style="min-height: 0px">
+    <GameDialog/>
+    <div v-if="gameOn"
       @click="handleUp"
       v-touch-swipe.mouse.right="handleRight"
       v-touch-swipe.mouse.left="handleLeft"
@@ -41,6 +40,7 @@ import TetrisBoard from '../components/TetrisBoard';
 import GameInfo from '../components/GameInfo';
 import GameControls from '../components/GameControls';
 import GameSpectres from '../components/GameSpectres';
+import GameDialog from '../components/GameDialog';
 
 export default defineComponent({
   name: 'GamePage',
@@ -49,6 +49,7 @@ export default defineComponent({
     GameInfo,
     GameControls,
     GameSpectres,
+    GameDialog,
   },
   created() {
     // window.addEventListener('keydown', this.keyEvent);
@@ -66,36 +67,40 @@ export default defineComponent({
     gameOn() {
       return this.$store.getters['game/getGameOn'];
     },
+    room() {
+      return this.$store.getters['game/getRoomName'];
+    },
+    player() {
+      return this.$store.getters['game/getPlayerName'];
+    },
+    isInGame() {
+      return (this.room.length > 0 && this.player.length > 0);
+    },
   },
   methods: {
     handleSpace() {
-      console.log('space');
       if (this.gameOn) {
-        console.log('space + GameOn');
+        this.$socket.emit('join_room', 'space');
       }
     },
     handleDown() {
-      console.log('down');
       if (this.gameOn) {
-        console.log('down + GameOn');
+        this.$socket.emit('move', 'down');
       }
     },
     handleUp() {
-      console.log('up');
       if (this.gameOn) {
-        console.log('up + GameOn');
+        this.$socket.emit('move', 'rotate');
       }
     },
     handleLeft() {
-      console.log('left');
       if (this.gameOn) {
-        console.log('left + GameOn');
+        this.$socket.emit('move', 'left');
       }
     },
     handleRight() {
-      console.log('right');
       if (this.gameOn) {
-        console.log('right + GameOn');
+        this.$socket.emit('move', 'right');
       }
     },
     keyEvent(event) {
@@ -114,6 +119,16 @@ export default defineComponent({
       if (event.code === 'ArrowRight') {
         this.handleRight();
       }
+    },
+  },
+  watch: {
+    isInGame: {
+      immediate: true,
+      handler(val) {
+        if (!val) {
+          this.$router.push('/');
+        }
+      },
     },
   },
 });

@@ -4,9 +4,8 @@ Socket.io powered multiplayer Tetris
 
 ## Install the dependencies
 ```bash
-yarn
-# or
 npm install
+npm i -g @quasar/cli
 ```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
