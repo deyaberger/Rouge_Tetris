@@ -2,16 +2,17 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-
         <q-toolbar-title>
-          Red Tetris
+          <span class="text-secondary">Stonger Tetris</span>
+        </q-toolbar-title>
+        <q-toolbar-title>
+          <span class="text-secondary text-bold">{{ room }}</span>
         </q-toolbar-title>
         <q-btn
-          v-if="this.$route.path === '/game'"
+          v-if="isInGame"
           flat
           label="Quit Room"
           @click="quitRoom"/>
-
       </q-toolbar>
     </q-header>
 
@@ -26,17 +27,21 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'MainLayout',
+  computed: {
+    room() {
+      return this.$store.getters['game/getRoomName'];
+    },
+    player() {
+      return this.$store.getters['game/getPlayerName'];
+    },
+    isInGame() {
+      return (this.room.length > 0 && this.player.length > 0);
+    },
+  },
   methods: {
     quitRoom() {
-      const msg = {
-        room_name: 'laplusbelle',
-        player_name: 'deya',
-      };
-      this.$socket.emit('quit_room', msg);
-      this.$socket.on('game_state', (ret) => {
-        console.log('msgGamePage', ret);
-        this.$router.push('/');
-      });
+      this.$store.dispatch('game/quit');
+      this.$socket.emit('quit');
     },
   },
 });

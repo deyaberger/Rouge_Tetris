@@ -1,11 +1,15 @@
+// eslint-disable-next-line
 export default function () {
   return {
     gameOn: false,
-    roomName: 'room#01',
-    playerName: 'lewis',
-    master: 'lewis',
-    winner: null,
-    spectres: [],
+    master: '',
+    playerHasLost: false,
+    playerName: '',
+    roomName: '',
+    rowsAboutToBeBlocked: [],
+    rowsAboutToDisappear: [],
+    spectres: {},
     tetris: [],
+    winner: null,
   };
 }

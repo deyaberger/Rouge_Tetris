@@ -1,17 +1,15 @@
 <template>
   <q-card flat>
     <q-card-section>
-      <div class="row">
-        <span class="text-bold">Room : </span>{{ room }}
-      </div>
-      <div class="row">
+      <div class="row q-my-md">
         <span class="text-bold">Player : </span>{{ playerName }}
       </div>
-      <div class="row">
+      <div class="row q-my-md">
         <span class="text-bold">Master : </span>{{ master }}
       </div>
-      <div v-if="winner" class="row">
-        <span class="text-bold">Winner : </span>{{ Winner }}
+      <div class="row q-my-md">
+        <span class="text-bold">Spectres details :</span>
+        <q-toggle color="secondary" v-model="details"/>
       </div>
     </q-card-section>
   </q-card>
@@ -20,6 +18,11 @@
 <script>
 export default {
   name: 'GameInfo',
+  data() {
+    return {
+      details: false,
+    };
+  },
   computed: {
     room() {
       return this.$store.getters['game/getRoomName'];
@@ -30,8 +33,10 @@ export default {
     master() {
       return this.$store.getters['game/getMaster'];
     },
-    winner() {
-      return this.$store.getters['game/getWinner'];
+  },
+  watch: {
+    details() {
+      this.$socket.emit('colors', this.details);
     },
   },
 };

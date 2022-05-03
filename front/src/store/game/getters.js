@@ -25,3 +25,15 @@ export function getSpectres(state) {
 export function getTetris(state) {
   return state.tetris;
 }
+
+export function getPlayerHasLost(state) {
+  return state.playerHasLost;
+}
+
+export function getRowsAboutToBeBlocked(state) {
+  return state.rowsAboutToBeBlocked;
+}
+
+export function getRowsAboutToDisappear(state) {
+  return state.rowsAboutToDisappear;
+}
