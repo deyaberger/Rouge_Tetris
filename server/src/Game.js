@@ -43,15 +43,19 @@ class Game {
 	update_players_state (io, room, testing) {
 		let active_player_nb = 0;
 		let active_player_id = null;
+		console.log("***********")
 		for (const player_id in this.players_list) {
+			console.log(`player id  ` + player_id)
 			if (Object.hasOwnProperty.call(this.players_list, player_id)) {
 				const player = this.players_list[player_id];
 				if (player.lost != true){
 					active_player_nb += 1;
+					console.log(`active_player_nb  ` + active_player_nb)
 					active_player_id = player_id;
 					const tetris = this.players_list[player_id].tetris;
 					tetris.clean();
 					if (tetris.apply_move("time") == false) {
+						console.log("on la mis a true");
 						this.players_list[player_id].lost = true;
 					}
 					if (tetris.rows_to_delete.length != 0) {

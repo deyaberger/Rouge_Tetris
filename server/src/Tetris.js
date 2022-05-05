@@ -209,7 +209,6 @@ class Tetris {
 				new_piece.rotate(1);
 			}
 			else if (move == "space") {
-				console.log("NOT HANDLED YET");
 			}
 			let result = this.does_it_fit(new_piece, new_position);
 			if (result == true)
@@ -222,10 +221,10 @@ class Tetris {
 				this.add_to_backgound();
 				this.update_spectre();
 				if (this.generate_new_piece() == false) {
-					return false;
+				return false;
 				}
 			}
-			return false;
+			return true;
 		}
 	}
 }
