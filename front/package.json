@@ -1,8 +1,8 @@
 {
-  "name": "red-tetris",
+  "name": "stronger-tetris",
   "version": "0.0.1",
   "description": "Socket.io powered multiplayer Tetris",
-  "productName": "red-tetris",
+  "productName": "Stronger Tetris",
   "author": "",
   "private": true,
   "scripts": {

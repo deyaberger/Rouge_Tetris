@@ -150,8 +150,8 @@ module.exports = configure((ctx) => ({
     },
 
     manifest: {
-      name: 'red-tetris',
-      short_name: 'red-tetris',
+      name: 'A Stonger Tetris',
+      short_name: 'Strong Tetris',
       description: 'Socket.io powered multiplayer Tetris',
       display: 'standalone',
       orientation: 'portrait',
@@ -217,7 +217,7 @@ module.exports = configure((ctx) => ({
     builder: {
       // https://www.electron.build/configuration/configuration
 
-      appId: 'red-tetris',
+      appId: 'stonger-tetris',
     },
 
     // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain

@@ -2,7 +2,10 @@
   <q-page class="flex flex-center">
     <div v-if="!connecting" style="width: 65vw; height: 65vh">
       <div class="row justify-center">
-        <h2 class="text-primary">Welcome to Red Tetris</h2>
+        <h2 class="text-primary">
+          Welcome to a Stronger
+          <span class="text-secondary">Tetris</span>
+        </h2>
       </div>
       <div class="q-ma-sm row justify-center">
         <q-input

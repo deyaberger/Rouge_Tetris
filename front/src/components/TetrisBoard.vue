@@ -38,9 +38,6 @@
 <script>
 export default {
   name: 'TetrisBoard',
-  mounted() {
-    // this.initTetris(this.tetris);
-  },
   computed: {
     tetris() {
       return this.$store.getters['game/getTetris'];
