@@ -12,7 +12,7 @@ class Tetris {
 		this.piece_position = null;
 		this.spectre = create_2d_array(this.max_row, this.max_col);
 		this.rows_to_delete = [];
-		this.rows_to_block = [];
+		this.rows_to_block = 0;
 	}
 
 	full_clean() {
@@ -21,12 +21,12 @@ class Tetris {
 		this.piece_position = null;
 		this.spectre = create_2d_array(this.max_row, this.max_col);
 		this.rows_to_delete = [];
-		this.rows_to_block = [];
+		this.rows_to_block = 0;
 	}
 
 	clean() {
 		this.rows_to_delete = [];
-		this.rows_to_block = [];
+		this.rows_to_block = 0;
 	}
 
 	update_spectre() {
@@ -121,12 +121,9 @@ class Tetris {
 	}
 
 
-	block(rows_to_block) {
-		for (var i = 0; i < rows_to_block.length; i++) {
-			this.rows_to_block.push(rows_to_block[i]);
-		}
-		for (let index = 0; index < this.rows_to_block.length; index++) {
-			const row = this.rows_to_block[index];
+	block() {
+		this.rows_to_block += 1;
+		for (let row = this.max_row - this.rows_to_block; row < this.max_row; row++) {
 			for (let j = 0; j < this.max_col; j++) {
 				this.background[row][j] = -1;
 			}
@@ -209,6 +206,7 @@ class Tetris {
 				new_piece.rotate(1);
 			}
 			else if (move == "space") {
+				console.log("NOT HANDLED YET");
 			}
 			let result = this.does_it_fit(new_piece, new_position);
 			if (result == true)
@@ -221,10 +219,10 @@ class Tetris {
 				this.add_to_backgound();
 				this.update_spectre();
 				if (this.generate_new_piece() == false) {
-				return false;
+					return false;
 				}
 			}
-			return true;
+			return false;
 		}
 	}
 }

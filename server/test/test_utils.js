@@ -27,8 +27,17 @@ full_line[19] = [2, 2, 2, 4, 4, 4, 4, 3, 3, 3];
 let after_delete = create_2d_array(max_row, max_col);
 after_delete[19] = [2, 0, 0, 4, 4, 4, 4, 0, 0, 3];
 
+let before_2nd_delete = create_2d_array(max_row, max_col);
+before_2nd_delete[17] = [3, 3, 3, 4, 4, 5, 5, 5, 6, 6];
+before_2nd_delete[18] = [2, 0, 0, 4, 4, 4, 4, 0, 0, 3];
+before_2nd_delete[19] = [2, 4, 4, 4, 4, 2, 1, 1, 1, 1];
+
 let after_delete_oponent = create_2d_array(max_row, max_col);
 after_delete_oponent[19] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+
+let after_2nd_delete_oponent = create_2d_array(max_row, max_col);
+after_2nd_delete_oponent[18] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+after_2nd_delete_oponent[19] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
 
 let after_delete_spectrum = create_2d_array(max_row, max_col);
 after_delete_spectrum[19] = [1, 0, 0, 1, 1, 1, 1, 0, 0, 1];
@@ -129,5 +138,6 @@ module.exports = {
 	end_with_six,
 	almost_full_with_fours_spectrum,
 	after_delete_spectrum,
-	after_delete_oponent
+	after_delete_oponent,
+	after_2nd_delete_oponent
 }

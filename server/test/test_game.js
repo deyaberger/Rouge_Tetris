@@ -21,7 +21,8 @@ room.game.on = true;
 const {
 	almost_full,
 	after_delete,
-	after_delete_oponent
+	after_delete_oponent,
+	after_2nd_delete_oponent
 	} = require("./test_utils");
 
 describe('Game', function () {
@@ -49,7 +50,7 @@ describe('Game', function () {
 			assert.equal(JSON.stringify(tetris_1.rows_to_delete), "[19]");
 			});
 		it ('should no have any rows to block for palyer 1', function() {
-				assert.equal(JSON.stringify(tetris_1.rows_to_block), "[]");
+				assert.equal(JSON.stringify(tetris_1.rows_to_block), "0");
 			});
 		it ('should no have any rows to delete for palyer 2', function() {
 				assert.equal(JSON.stringify(tetris_2.rows_to_delete), "[]");

@@ -11,6 +11,15 @@ const io = new Server(server, {
 });
 
 const room_manager = new RoomManager();
+function disconnect(room, socket) {
+	if (room != null) {
+		room.remove_player(socket); // Check if not better IO
+		if (room.master == null) {
+			room_manager.remove_room(room.name)
+		}
+		console.log(room_manager.global_rooms_list)
+	}
+}
 
 
 io.on('connection', (socket) => {
@@ -30,6 +39,12 @@ io.on('connection', (socket) => {
 		if (room != null && room.master == player.name) {
 			room.game.on = true;
 		room.game.start(io, room); }
+	})
+
+	socket.on('state', (msg) => {
+		if (room != null) {
+			socket.emit("game_state", room.get_state(socket.id));
+		}
 	})
 
 	socket.on('move', (msg) => {
@@ -53,14 +68,13 @@ io.on('connection', (socket) => {
 	})
 
 	socket.on('quit', () => {
-		if (room != null) {
-			room.remove_player(socket); // Check if not better IO
-			if (room.master == null) {
-				room_manager.remove_room(room.name)
-			}
-			console.log(room_manager.global_rooms_list)
-		}
+		disconnect(room);
 	});
+
+	socket.on("disconnect", (reason) => {
+		console.log("A client just left");
+		disconnect(room, socket);
+	  });
 });
 
 server.listen(3000, () => {

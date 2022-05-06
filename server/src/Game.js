@@ -27,12 +27,12 @@ class Game {
 		}
 	}
 
-	block_other_players_rows(rows_to_block, who_did_zat) {
+	block_other_players_rows(who_did_zat) {
 		for (const player_id in this.players_list) {
 			if (Object.hasOwnProperty.call(this.players_list, player_id)) {
 				if (player_id != who_did_zat) {
 					const tetris = this.players_list[player_id].tetris;
-					tetris.block(rows_to_block);
+					tetris.block();
 				}
 			}
 		}
@@ -55,11 +55,10 @@ class Game {
 					const tetris = this.players_list[player_id].tetris;
 					tetris.clean();
 					if (tetris.apply_move("time") == false) {
-						console.log("on la mis a true");
 						this.players_list[player_id].lost = true;
 					}
 					if (tetris.rows_to_delete.length != 0) {
-						this.block_other_players_rows(tetris.rows_to_delete, player_id);
+						this.block_other_players_rows(player_id);
 					}
 					// this.print_state(tetris);
 					if (testing != true) {
