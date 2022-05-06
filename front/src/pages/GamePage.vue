@@ -1,6 +1,6 @@
 <template>
   <q-page style="min-height: 0px">
-    <GameDialog/>
+    <GameDialog :isMaster="master === player"/>
     <div v-if="gameOn"
       @click="handleUp"
       v-touch-swipe.mouse.right="handleRight"
@@ -72,12 +72,23 @@ export default defineComponent({
     player() {
       return this.$store.getters['game/getPlayerName'];
     },
+    master() {
+      return this.$store.getters['game/getMaster'];
+    },
     isInGame() {
       return (this.room.length > 0 && this.player.length > 0);
     },
   },
   methods: {
+    joinRoom() {
+      const msg = {
+        player_name: this.playerName,
+        room_name: this.roomName,
+      };
+      this.$socket.emit('join_room', msg);
+    },
     handleSpace() {
+      console.log('this.$router.params', this.$router.params);
       if (this.gameOn) {
         this.$socket.emit('join_room', 'space');
       }

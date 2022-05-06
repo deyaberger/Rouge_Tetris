@@ -14,9 +14,9 @@
         <q-card-actions align="right">
           <q-btn flat label="Quit room" color="primary"
             @click="quit()"/>
-          <q-btn v-if="winner" flat label="Start a new game!" color="primary"
+          <q-btn v-if="winner && isMaster" flat label="Start a new game!" color="primary"
             @click="this.$socket.emit('restart')"/>
-          <q-btn v-else flat label="Start game!" color="primary"
+          <q-btn v-if="!winner && isMaster" flat label="Start game!" color="primary"
             @click="this.$socket.emit('start')"/>
         </q-card-actions>
       </q-card>
@@ -26,6 +26,9 @@
 <script>
 export default {
   name: 'GameDialog',
+  props: {
+    isMaster: Boolean,
+  },
   computed: {
     gameNotOn() {
       return !this.$store.getters['game/getGameOn'];
