@@ -68,7 +68,7 @@ io.on('connection', (socket) => {
 	})
 
 	socket.on('quit', () => {
-		disconnect(room);
+		disconnect(room, socket);
 	});
 
 	socket.on("disconnect", (reason) => {
