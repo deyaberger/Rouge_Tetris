@@ -118,7 +118,7 @@ export default defineComponent({
       }
     },
     keyEvent(event) {
-      if (event.code === 'space') {
+      if (event.code === 'Space') {
         this.handleSpace();
       }
       if (event.code === 'ArrowDown') {

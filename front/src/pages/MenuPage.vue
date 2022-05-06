@@ -48,6 +48,17 @@ export default {
       roomName: '',
     };
   },
+  created() {
+    window.addEventListener('keydown', (e) => {
+      if (['Enter'].includes(e.code)) {
+        e.preventDefault();
+        this.keyEvent(e);
+      }
+    }, false);
+  },
+  beforeUnmount() {
+    window.removeEventListener('keydown', this.keyEvent);
+  },
   computed: {
     room() {
       return this.$store.getters['game/getRoomName'];
@@ -63,12 +74,19 @@ export default {
     },
   },
   methods: {
+    keyEvent(event) {
+      if (event.code === 'Enter') {
+        this.joinRoom();
+      }
+    },
     joinRoom() {
       const msg = {
         player_name: this.playerName,
         room_name: this.roomName,
       };
-      this.$socket.emit('join_room', msg);
+      if (msg.player_name.length > 0 && msg.room_name.length > 0) {
+        this.$socket.emit('join_room', msg);
+      }
     },
   },
   watch: {
