@@ -11,8 +11,12 @@ const io = new Server(server, {
 });
 
 const room_manager = new RoomManager();
+
 function disconnect(room, socket) {
+	console.log("room");
+	console.log(room);
 	if (room != null) {
+		console.log("removing room")
 		room.remove_player(socket); // Check if not better IO
 		if (room.master == null) {
 			room_manager.remove_room(room.name)
@@ -28,6 +32,7 @@ io.on('connection', (socket) => {
 	var room = null;
 	var player = null;
 	socket.on('join_room', (msg) => {
+		console.log("Joining Room");
 		room = room_manager.handle_socket_msg(msg, socket);
 		if (room != null) {
 			player = room.players_list[socket.id];
@@ -36,18 +41,22 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('start', (msg) => {
+		console.log("starting");
 		if (room != null && room.master == player.name) {
 			room.game.on = true;
 		room.game.start(io, room); }
 	})
 
 	socket.on('state', (msg) => {
+		console.log("Stattte please");
 		if (room != null) {
+			console.log("Asking for state")
 			socket.emit("game_state", room.get_state(socket.id));
 		}
 	})
 
 	socket.on('move', (msg) => {
+		console.log("Move  please");
 		if (room != null && player != null && room.game.on == true) {
 			player.tetris.apply_move(msg);
 			socket.emit("game_state", room.get_state(socket.id));
@@ -56,19 +65,27 @@ io.on('connection', (socket) => {
 	})
 
 	socket.on('stop', (msg) => {
+		console.log("Room  please");
 		if (room != null && room.game.on == true) {
 			room.game.stop(io, room);
 		}
 	})
 
 	socket.on('restart', (msg) => {
+		console.log("Restart  please");
 		if (room != null && room.game.on == false) {
 			room.game.restart(io, room);
 		}
 	})
 
 	socket.on('quit', () => {
-		disconnect(room, socket);
+		console.log("Quit  please");
+		if (room != null) {
+			console.log("Quitting");
+			console.log("room before");
+		console.log(room);
+			disconnect(room, socket);
+		}
 	});
 
 	socket.on("disconnect", (reason) => {
