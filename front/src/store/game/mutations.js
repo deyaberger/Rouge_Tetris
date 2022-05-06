@@ -9,6 +9,7 @@ export function setGameState(state, gameState) {
   state.spectres = gameState.spectres;
   state.tetris = gameState.tetris;
   state.winner = gameState.winner;
+  state.colors = gameState.colors;
 }
 
 export function quit(state) {

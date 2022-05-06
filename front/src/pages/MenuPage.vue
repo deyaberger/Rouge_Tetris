@@ -85,7 +85,8 @@ export default {
           player_name: this.playerName,
           room_name: this.roomName,
         };
-        if (msg.player_name.length > 0 && msg.room_name.length > 0) {
+        if (msg.player_name && msg.room_name
+        && msg.player_name.length > 0 && msg.room_name.length > 0) {
           this.$socket.emit('join_room', msg);
         }
       }

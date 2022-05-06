@@ -86,7 +86,9 @@ export default defineComponent({
   },
   methods: {
     joinRoom(room, player) {
-      if (this.room.length === 0) {
+      if (this.room.length === 0
+      && room && player
+      && room.length > 0 && player.length > 0) {
         const msg = {
           room_name: room,
           player_name: player,

@@ -11,5 +11,6 @@ export default function () {
     spectres: {},
     tetris: [],
     winner: null,
+    colors: false,
   };
 }
