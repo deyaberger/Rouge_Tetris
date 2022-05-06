@@ -55,6 +55,7 @@ class Game {
 					const tetris = this.players_list[player_id].tetris;
 					tetris.clean();
 					if (tetris.apply_move("time") == false) {
+						console.log("Equals true")
 						this.players_list[player_id].lost = true;
 					}
 					if (tetris.rows_to_delete.length != 0) {

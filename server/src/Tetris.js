@@ -222,7 +222,7 @@ class Tetris {
 					return false;
 				}
 			}
-			return false;
+			return true;
 		}
 	}
 }
