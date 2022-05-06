@@ -78,17 +78,21 @@ export default defineComponent({
     isInGame() {
       return (this.room.length > 0 && this.player.length > 0);
     },
+    route() {
+      const routeRoom = this.$route.params.room;
+      const routePlayer = this.$route.params.player;
+      return { room: routeRoom, player: routePlayer };
+    },
   },
   methods: {
-    joinRoom() {
+    joinRoom(room, player) {
       const msg = {
-        player_name: this.playerName,
-        room_name: this.roomName,
+        room_name: room,
+        player_name: player,
       };
       this.$socket.emit('join_room', msg);
     },
     handleSpace() {
-      console.log('this.$router.params', this.$router.params);
       if (this.gameOn) {
         this.$socket.emit('join_room', 'space');
       }
@@ -138,6 +142,12 @@ export default defineComponent({
         if (!val) {
           this.$router.push('/');
         }
+      },
+    },
+    route: {
+      immediate: true,
+      handler(val) {
+        this.joinRoom(val.room, val.player);
       },
     },
   },
