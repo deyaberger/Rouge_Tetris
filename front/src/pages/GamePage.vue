@@ -86,11 +86,13 @@ export default defineComponent({
   },
   methods: {
     joinRoom(room, player) {
-      const msg = {
-        room_name: room,
-        player_name: player,
-      };
-      this.$socket.emit('join_room', msg);
+      if (this.room.length === 0) {
+        const msg = {
+          room_name: room,
+          player_name: player,
+        };
+        this.$socket.emit('join_room', msg);
+      }
     },
     handleSpace() {
       if (this.gameOn) {

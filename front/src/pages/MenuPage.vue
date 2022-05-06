@@ -80,12 +80,14 @@ export default {
       }
     },
     joinRoom() {
-      const msg = {
-        player_name: this.playerName,
-        room_name: this.roomName,
-      };
-      if (msg.player_name.length > 0 && msg.room_name.length > 0) {
-        this.$socket.emit('join_room', msg);
+      if (this.room.length === 0) {
+        const msg = {
+          player_name: this.playerName,
+          room_name: this.roomName,
+        };
+        if (msg.player_name.length > 0 && msg.room_name.length > 0) {
+          this.$socket.emit('join_room', msg);
+        }
       }
     },
   },
