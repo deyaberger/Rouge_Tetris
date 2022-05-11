@@ -1,3 +1,4 @@
+const { log } = require('console');
 const seedrandom = require('seedrandom');
 let { Piece } = require("./Piece");
 var {create_2d_array, copy_array} = require("./utils");
@@ -26,7 +27,6 @@ class Tetris {
 
 	clean() {
 		this.rows_to_delete = [];
-		this.rows_to_block = 0;
 	}
 
 	update_spectre() {
@@ -69,7 +69,8 @@ class Tetris {
 				if (piece_value == 0) {
 					continue;
 				}
-				else if (this.is_outside_up(piece_position[0] + i, piece_position[1] + j)) {
+				else if (this.is_outside_up(piece_position[0] + i, piece_position[1] + j)
+						&& !this.is_outside_sides(piece_position[0] + i, piece_position[1] + j)) {
 					continue;
 				}
 				else if (this.is_outside_sides(piece_position[0] + i, piece_position[1] + j)) {
@@ -77,7 +78,6 @@ class Tetris {
 				}
 				let background_value = this.background[piece_position[0] + i][piece_position[1] + j];
 				if (piece_value != 0 && background_value != 0) {
-					// console.log("occupied");
 					return false;
 				}
 			}			

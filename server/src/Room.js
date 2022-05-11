@@ -17,7 +17,7 @@ class Room {
 		if (Object.keys(this.players_list).length > 1) {
 			for (var key in this.players_list) {
 				if (key != ID) {
-					spectres[this.players_list[key].name] = this.players_list[key].tetris.spectre; // ! WERE SHOULD IT GO??
+					spectres[this.players_list[key].name] = this.players_list[key].tetris.spectre;
 				}
 			}
 		}
@@ -55,7 +55,7 @@ class Room {
 				this.master = this.players_list[next_key].name;
 			}
 		}
-		socket.to(this.name).emit("a_player_left", true); // ! TO BE HANDLED ON CLIENT SIDE
+		socket.to(this.name).emit("a_player_left", true); 
 	}
 
 }
@@ -118,7 +118,7 @@ class RoomManager {
 			return;
 		}
 		const room = this.find_or_create_room(msg.room_name);
-		if (!this.is_room_available(room)) // ! TO TEST
+		if (!this.is_room_available(room)) 
 		{
 			chaussette.emit("error", "sorry, this room is not available");
 			return;
@@ -127,7 +127,7 @@ class RoomManager {
 		this.connect_room_player(room, player, chaussette.id);
 		chaussette.join(room.name);
 		chaussette.emit("game_state", room.get_state(chaussette.id))
-		chaussette.to(room.name).emit("new_player", true) // ! ADD STATE QUESTION ON CLIENT SIDE
+		chaussette.to(room.name).emit("new_player", true)
 		return room;
 	}
 
