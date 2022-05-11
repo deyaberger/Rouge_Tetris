@@ -96,7 +96,7 @@ class Tetris {
 				let piece_value = piece.x[i][j];
 				// console.log(`piece value = ${piece_value}\npos[0] = ${position[0]}, pos[1] = ${position[1]}\ni = ${i}, j = ${j}`);
 				if (position[0] + i >= 0 && piece_value != 0) {
-					if (piece_value == 5 && array[position[0] + i][position[1] + j] != 0) { // ! TO BE CHANGED TO -2
+					if (piece_value == -1 && array[position[0] + i][position[1] + j] != 0) { // ! TO BE CHANGED TO -2
 						continue;
 					}
 					array[position[0] + i][position[1] + j] = piece_value;
@@ -163,18 +163,37 @@ class Tetris {
 		}
 	}
 
-	get_ghost(piece, piece_position) {
+	get_highest_hit(piece, piece_position) {
 		var start = piece_position[1] >= 0 ? piece_position[1] : 0;
 		var end = 0 + piece_position[1] + piece.size[0];
-
-		var sliced = this.spectre_limit.slice(start, end)
+		var sliced = this.spectre_limit.slice(start, end);
 		var highest_hit = Math.min.apply(Math, sliced);
+		return highest_hit;
+	}
+
+	create_ghost(piece, new_position) {
+		this.ghost_position = new_position;
+		this.ghost_piece = new Piece(piece.piece_nb, piece.rotation_nb);
+		this.ghost_piece.replace_values(-1); // ! TO BE CHANGED TO -2
+	}
+
+	get_ghost(piece, piece_position) {
+		let highest_hit = this.get_highest_hit(piece, piece_position);
 		for (let i = highest_hit; i > 0; i--) {
 			var new_position = [i, piece_position[1]]
-			if (this.does_it_fit(piece, new_position) == true) { 
-				this.ghost_position = new_position;
-				this.ghost_piece = new Piece(piece.piece_nb, piece.rotation_nb);
-				this.ghost_piece.replace_values(5); // ! TO BE CHANGED TO -2
+			if (this.does_it_fit(piece, new_position) == true) {
+				if (i == highest_hit) {
+					for (let k = i + 1; k < this.max_row; k++) {
+						var new_position_bis = [k, piece_position[1]]
+						if (this.does_it_fit(piece, new_position_bis) == true) {
+							new_position = new_position_bis;
+						}
+						else {
+							break;
+						}
+					}
+				}
+				this.create_ghost(piece, new_position);
 				return true;
 			}
 		}
@@ -184,7 +203,7 @@ class Tetris {
 	get_state() {
 		let state = copy_array(this.background, this.max_row, this.max_col);
 		if (this.active_piece != null) {
-			this.get_ghost(this.active_piece, this.piece_position)
+			this.get_ghost(this.active_piece, this.piece_position);
 			this.add_piece_to_array(state, this.active_piece, this.piece_position);
 			if (this.ghost_piece != null && this.ghost_position != this.piece_position) {
 				this.add_piece_to_array(state, this.ghost_piece, this.ghost_position);
@@ -195,8 +214,8 @@ class Tetris {
 
 
 	generate_new_piece() {
-		// let piece_nb = (Math.round(this.generator() * 10) % 6) + 1;
-		let piece_nb = 4;
+		let piece_nb = (Math.round(this.generator() * 10) % 6) + 1;
+		// let piece_nb = 4;
 		if (piece_nb < 1 || piece_nb > 7) {console.log(`--------------------------ERROR: piece_nb = ${piece_nb}`)};
 		let rotation_nb = 0;
 		let piece = new Piece(piece_nb, rotation_nb);
@@ -207,6 +226,7 @@ class Tetris {
 		}
 		this.active_piece = piece;
 		this.piece_position = piece_position;
+		this.get_ghost(this.active_piece, this.piece_position);
 		return true;
 	}
 
@@ -235,6 +255,7 @@ class Tetris {
 				new_piece.rotate(1);
 			}
 			else if (move == "space") {
+				new_position = [this.ghost_position[0], this.ghost_position[1]];
 				console.log("NOT HANDLED YET");
 			}
 			let result = this.does_it_fit(new_piece, new_position);
