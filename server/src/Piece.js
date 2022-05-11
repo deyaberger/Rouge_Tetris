@@ -91,6 +91,16 @@ class Piece {
 		this.rotation_nb = (this.rotation_nb + rotations) % 4;
 	}
 
+	replace_values(new_v) {
+		for (let i = 0; i < this.size[0]; i++) {
+			for (let j = 0; j < this.size[1]; j++) {
+				if (this.x[i][j] != 0) {
+					this.x[i][j] = new_v;
+				}
+			}
+		}
+	}
+
 	turquoise(v) {
 		let x = [   
 			[0, 0, 0, 0],

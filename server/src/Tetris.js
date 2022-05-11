@@ -1,4 +1,3 @@
-const { log } = require('console');
 const seedrandom = require('seedrandom');
 let { Piece } = require("./Piece");
 var {create_2d_array, copy_array} = require("./utils");
@@ -14,6 +13,8 @@ class Tetris {
 		this.spectre = create_2d_array(this.max_row, this.max_col);
 		this.rows_to_delete = [];
 		this.rows_to_block = 0;
+		this.spectre_limit = [20,20,20,20,20,20,20,20,20,20];
+		this.ghost_piece = null;
 	}
 
 	full_clean() {
@@ -33,6 +34,9 @@ class Tetris {
 		for (let j = 0; j < this.max_col; j++) {
 			let quickest_touch = false;
 			for (let i = 0; i < this.max_row; i++) {
+				if (this.background[i][j] != 0 && quickest_touch == false) {
+					this.spectre_limit[j] = i;
+				}
 				if (this.background[i][j] != 0 || quickest_touch == true) {
 					quickest_touch = true;
 					this.spectre[i][j] = 1;
@@ -156,11 +160,31 @@ class Tetris {
 		}
 	}
 
+	get_ghost(piece, piece_position) {
+		var sliced = this.spectre_limit.slice(piece_position[1], piece_position[1] + piece.size[0])
+		var highest_hit = Math.min.apply(Math, sliced);
+		for (let i = highest_hit - 1; i >= 0; i--) {
+			var new_position = [i, piece_position[1]]
+			if (this.does_it_fit(piece, new_position) == true) { 
+				this.ghost_position = new_position;
+				this.ghost_piece = new Piece(piece.piece_nb, piece.rotation_nb);
+				this.ghost_piece.replace_values(-1);
+				return true;
+			}
+		}
+		return false;
+	}
 
 	get_state() {
 		let state = copy_array(this.background, this.max_row, this.max_col);
 		if (this.active_piece != null) {
+			this.get_ghost(this.active_piece, this.piece_position)
 			this.add_piece_to_array(state, this.active_piece, this.piece_position);
+			if (this.ghost_piece != null) {
+				console.log("GHOST: ");
+				console.log(this.ghost_piece);
+				this.add_piece_to_array(state, this.ghost_piece, this.ghost_position);
+			}
 		}
 		return state;
 	}
@@ -218,6 +242,8 @@ class Tetris {
 			else if (result == false && move == "time") {
 				this.add_to_backgound();
 				this.update_spectre();
+				console.log("this.spectre limit: ");
+				console.log(this.spectre_limit);
 				if (this.generate_new_piece() == false) {
 					return false;
 				}
