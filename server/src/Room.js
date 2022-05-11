@@ -123,7 +123,7 @@ class RoomManager {
 			chaussette.emit("error", "sorry, this room is not available");
 			return;
 		}
-		const player = new Player(msg.player_name, room.game.generator);
+		const player = new Player(msg.player_name, room.game.seed);
 		this.connect_room_player(room, player, chaussette.id);
 		chaussette.join(room.name);
 		chaussette.emit("game_state", room.get_state(chaussette.id))
