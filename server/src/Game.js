@@ -100,6 +100,11 @@ class Game {
 		this.start(io, room);
 	}
 
+	pause() {
+		this.on = false;
+		clearInterval(this.interval);
+	}
+
 }
 
 module.exports = { Game }

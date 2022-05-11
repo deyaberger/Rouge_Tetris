@@ -50,8 +50,18 @@ io.on('connection', (socket) => {
 	socket.on('state', (msg) => {
 		console.log("Stattte please");
 		if (room != null) {
-			console.log("Asking for state")
 			socket.emit("game_state", room.get_state(socket.id));
+		}
+	})
+
+	socket.on('colors', (msg) => {
+		console.log("colors please");
+		// ! PRETENDING IT IS A PAUSE FOR NOW
+		if (room != null && msg == true) {
+			room.game.pause();
+		}
+		else if (room != null && msg == false) {
+			room.game.start(io, room);
 		}
 	})
 
