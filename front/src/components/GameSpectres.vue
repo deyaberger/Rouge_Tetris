@@ -45,13 +45,13 @@ export default {
     spectres() {
       return this.$store.getters['game/getSpectres'];
     },
-    details() {
-      return this.$store.getters['game/getDetails'];
+    colors() {
+      return this.$store.getters['game/getColors'];
     },
   },
   methods: {
     getColor(value) {
-      if (!this.details) {
+      if (!this.colors) {
         return {
           blocked: value !== 0,
           empty: value === 0,

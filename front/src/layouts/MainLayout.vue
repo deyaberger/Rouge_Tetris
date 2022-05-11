@@ -9,7 +9,17 @@
           <span class="text-secondary text-bold">{{ room }}</span>
         </q-toolbar-title>
         <q-btn
-          v-if="isInGame"
+          v-if="isMuted"
+          flat
+          :icon="'volume_off'"
+          @click="mute"/>
+        <q-btn
+          v-else
+          flat
+          :icon="'volume_up'"
+          @click="mute"/>
+        <q-btn
+          v-show="isInGame"
           flat
           label="Quit Room"
           @click="quitRoom"/>
@@ -27,21 +37,64 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'MainLayout',
+  data() {
+    return {
+      audio: '',
+      isPlaying: false,
+      isMuted: false,
+    };
+  },
+  mounted() {
+    // eslint-disable-next-line
+    this.audio = new Audio(require('../assets/stronger-tetris.mp3'));
+    this.audio.loop = true;
+    this.audio.volume = 0.3;
+  },
   computed: {
     room() {
       return this.$store.getters['game/getRoomName'];
     },
-    player() {
+    payer() {
       return this.$store.getters['game/getPlayerName'];
+    },
+    gameOn() {
+      return this.$store.getters['game/getGameOn'];
     },
     isInGame() {
       return (this.room.length > 0 && this.player.length > 0);
     },
   },
   methods: {
+    play() {
+      this.audio.play();
+      this.isPlaying = true;
+    },
+    mute() {
+      if (this.audio.muted) {
+        this.audio.muted = false;
+        this.isMuted = false;
+      } else {
+        this.audio.muted = true;
+        this.isMuted = true;
+      }
+    },
+    stop() {
+      this.audio.pause();
+      this.audio.currentTime = 0;
+      this.isPlaying = false;
+    },
     quitRoom() {
       this.$store.dispatch('game/quit');
       this.$socket.emit('quit');
+    },
+  },
+  watch: {
+    gameOn(val) {
+      if (val) {
+        this.play();
+      } else {
+        this.stop();
+      }
     },
   },
 });

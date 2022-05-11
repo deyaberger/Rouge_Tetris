@@ -26,6 +26,10 @@ export function getTetris(state) {
   return state.tetris;
 }
 
+export function getColors(state) {
+  return state.colors;
+}
+
 export function getPlayerHasLost(state) {
   return state.playerHasLost;
 }
