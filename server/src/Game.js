@@ -7,6 +7,7 @@ class Game {
 		this.winner = null;
 		this.seed = Math.random();
 		this.players_list = players_list;
+		this.winner_pause = false;
 	}
 
 	print_state(tetris) {
@@ -65,6 +66,11 @@ class Game {
 			}
 		}
 		if (active_player_id != null && active_player_nb == 1) {
+			if (Object.keys(this.players_list).length > 1 && this.winner_pause == false) {
+				this.pause();
+				this.winner_pause = true;
+				io.to(active_player_id).emit("winner", room.get_state(active_player_id)); // ! TO BE HANDLED ON CLIENT SIDE !!
+			} 
 			this.winner = this.players_list[active_player_id].name;
 		}
 		if (active_player_nb == 0) {

@@ -10,6 +10,7 @@ class Room {
 		this.master = null;
 		this.players_list = {};
 		this.game = new Game(this.players_list);
+		this.colors = false;
 	}
 
 	get_other_player_spectres(ID) {
@@ -17,7 +18,12 @@ class Room {
 		if (Object.keys(this.players_list).length > 1) {
 			for (var key in this.players_list) {
 				if (key != ID) {
-					spectres[this.players_list[key].name] = this.players_list[key].tetris.spectre;
+					if (this.colors == true) {
+						spectres[this.players_list[key].name] = this.players_list[key].tetris.get_state();
+					}
+					else {
+						spectres[this.players_list[key].name] = this.players_list[key].tetris.spectre;
+					}
 				}
 			}
 		}
@@ -127,7 +133,7 @@ class RoomManager {
 		this.connect_room_player(room, player, chaussette.id);
 		chaussette.join(room.name);
 		chaussette.emit("game_state", room.get_state(chaussette.id))
-		chaussette.to(room.name).emit("new_player", true)
+		chaussette.to(room.name).emit("new_player", true);
 		return room;
 	}
 

@@ -54,19 +54,30 @@ io.on('connection', (socket) => {
 		}
 	})
 
-	socket.on('colors', (msg) => {
-		console.log("colors please");
-		// ! PRETENDING IT IS A PAUSE FOR NOW
+	socket.on('pause', (msg) => {
+		console.log("pause please");
 		if (room != null && msg == true) {
 			room.game.pause();
 		}
-		else if (room != null && msg == false) {
+	})
+
+	socket.on('continue', (msg) => {
+		console.log("continue please");
+		if (room != null && msg == true) {
 			room.game.start(io, room);
 		}
 	})
 
+	socket.on('colors', (msg) => {
+		console.log("colors please");
+		if (room != null) {
+			room.colors = msg;
+			socket.to(room.name).emit("a_player_left", true); //! Change event name!!
+		}
+	})
+
 	socket.on('move', (msg) => {
-		console.log("Move  please");
+		// console.log("Move  please");
 		if (room != null && player != null && room.game.on == true) {
 			player.tetris.apply_move(msg);
 			socket.emit("game_state", room.get_state(socket.id));
@@ -75,7 +86,7 @@ io.on('connection', (socket) => {
 	})
 
 	socket.on('stop', (msg) => {
-		console.log("Room  please");
+		console.log("Stop  please");
 		if (room != null && room.game.on == true) {
 			room.game.stop(io, room);
 		}
@@ -93,7 +104,7 @@ io.on('connection', (socket) => {
 		if (room != null) {
 			console.log("Quitting");
 			console.log("room before");
-		console.log(room);
+			console.log(room);
 			disconnect(room, socket);
 		}
 	});
