@@ -1,3 +1,4 @@
+const seedrandom = require('seedrandom');
 const { Tetris } = require("./Tetris")
 
 
@@ -28,12 +29,14 @@ class Game {
 		}
 	}
 
-	block_other_players_rows(who_did_zat) {
+	block_other_players_rows(who_did_zat, nb_rows) {
 		for (const player_id in this.players_list) {
 			if (Object.hasOwnProperty.call(this.players_list, player_id)) {
 				if (player_id != who_did_zat) {
 					const tetris = this.players_list[player_id].tetris;
-					tetris.block();
+					for (let i = 0; i < nb_rows; i++) {
+						tetris.block();
+					}
 				}
 			}
 		}
@@ -57,7 +60,7 @@ class Game {
 						this.players_list[player_id].lost = true;
 					}
 					if (tetris.rows_to_delete.length != 0) {
-						this.block_other_players_rows(player_id);
+						this.block_other_players_rows(player_id, tetris.rows_to_delete.length);
 					}
 					if (testing != true) {
 						io.to(player_id).emit("game_state", room.get_state(player_id));
@@ -75,7 +78,7 @@ class Game {
 		}
 		if (active_player_nb == 0) {
 			console.log("END OF GAME");
-			this.stop();
+			this.stop(io, room);
 		}
 	}
 
@@ -95,12 +98,12 @@ class Game {
 	}
 
 	restart(io, room) {
-		this.generator = seedrandom(Math.random());
+		this.seed = Math.random();
 		for (const player_id in this.players_list) {
 			if (Object.hasOwnProperty.call(this.players_list, player_id)) {
 				const player = this.players_list[player_id];
 				player.lost = false;
-				player.tetris = new Tetris(this.generator);
+				player.tetris = new Tetris(this.seed);
 			}
 		}
 		this.start(io, room);

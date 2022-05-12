@@ -72,6 +72,10 @@ class RoomManager {
 	constructor() {
 		this.global_rooms_list = {};
 		}
+
+	get_state() {
+		return (this.global_rooms_list);
+	}
 	
 	find_or_create_room(room_name) {
 		let room = this.global_rooms_list[room_name];

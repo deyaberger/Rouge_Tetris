@@ -156,7 +156,7 @@ class Tetris {
 
 	add_to_backgound() {
 		this.add_piece_to_array(this.background, this.active_piece, this.piece_position);
-		this.check_full_rows();
+		this.check_full_rows(); 
 		if (this.rows_to_delete != [])
 		{
 			this.delete_row();
@@ -263,6 +263,7 @@ class Tetris {
 			{
 				this.active_piece = new_piece;
 				this.piece_position = new_position;
+				// this.check_full_rows();
 				return true;
 			}		
 			else if (result == false && move == "time") {
