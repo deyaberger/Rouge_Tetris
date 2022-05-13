@@ -10,6 +10,17 @@ let almost_full = create_2d_array(max_row, max_col);
 almost_full[18] = [2, 0, 0, 0, 0, 4, 4, 0, 0, 3];
 almost_full[19] = [2, 2, 2, 0, 0, 4, 4, 3, 3, 3];
 
+let almost_full2 = create_2d_array(max_row, max_col);
+almost_full2[17] = [2, 2, 0, 0, 5, 5, 5, 4, 4, 3];
+almost_full2[18] = [2, 2, 0, 0, 5, 5, 5, 0, 0, 3];
+almost_full2[19] = [1, 1, 5, 5, 0, 0, 0, 0, 0, 0];
+
+let almost_full2_after = create_2d_array(max_row, max_col);
+almost_full2_after[18] = [2, 2, 4, 4, 5, 5, 5, 0, 0, 3];
+almost_full2_after[19] = [1, 1, 5, 5, 0, 0, 0, 0, 0, 0];
+
+
+
 let almost_full_with_fours = create_2d_array(max_row, max_col);
 almost_full_with_fours[17] = [0, 0, 0, 4, 4, 0, 0, 0, 0, 0];
 almost_full_with_fours[18] = [2, 0, 0, 4, 4, 4, 4, 0, 0, 3];
@@ -139,5 +150,7 @@ module.exports = {
 	almost_full_with_fours_spectrum,
 	after_delete_spectrum,
 	after_delete_oponent,
-	after_2nd_delete_oponent
+	after_2nd_delete_oponent,
+	almost_full2,
+	almost_full2_after
 }

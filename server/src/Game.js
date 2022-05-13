@@ -9,25 +9,27 @@ class Game {
 		this.seed = Math.random();
 		this.players_list = players_list;
 		this.winner_pause = false;
+		this.interval = null;
+		// this.show_ghost = false;
 	}
 
-	print_state(tetris) {
-		let state = tetris.get_state();
-		for (let i = 0; i < tetris.max_row; i++) {
-			for (let j = 0; j < tetris.max_col; j++) {
-				if (state[i][j] != 0 && state[i][j] != -1) {
-					process.stdout.write(`\x1b[33m ${state[i][j]} \x1b[0m`);
-				}
-				else if (state[i][j] == -1) {
-					process.stdout.write(`\x1b[37m${state[i][j]} \x1b[0m`);
-				}
-				else {
-					process.stdout.write(` ${state[i][j]} `);
-				}
-			}
-			console.log("");
-		}
-	}
+	// print_state(tetris) {
+	// 	let state = tetris.get_state();
+	// 	for (let i = 0; i < tetris.max_row; i++) {
+	// 		for (let j = 0; j < tetris.max_col; j++) {
+	// 			if (state[i][j] != 0 && state[i][j] != -1) {
+	// 				process.stdout.write(`\x1b[33m ${state[i][j]} \x1b[0m`);
+	// 			}
+	// 			else if (state[i][j] == -1) {
+	// 				process.stdout.write(`\x1b[37m${state[i][j]} \x1b[0m`);
+	// 			}
+	// 			else {
+	// 				process.stdout.write(` ${state[i][j]} `);
+	// 			}
+	// 		}
+	// 		console.log("");
+	// 	}
+	// }
 
 	block_other_players_rows(who_did_zat, nb_rows) {
 		for (const player_id in this.players_list) {
@@ -41,7 +43,6 @@ class Game {
 			}
 		}
 	}
-
 
 
 	update_players_state (io, room, testing) {
@@ -112,6 +113,7 @@ class Game {
 	pause() {
 		this.on = false;
 		clearInterval(this.interval);
+		this.interval = null;
 	}
 
 }

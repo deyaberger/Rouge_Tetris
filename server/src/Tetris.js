@@ -15,6 +15,7 @@ class Tetris {
 		this.rows_to_block = 0;
 		this.spectre_limit = [20,20,20,20,20,20,20,20,20,20];
 		this.ghost_piece = null;
+		this.show_ghost = false;
 	}
 
 	full_clean() {
@@ -205,7 +206,7 @@ class Tetris {
 		if (this.active_piece != null) {
 			this.get_ghost(this.active_piece, this.piece_position);
 			this.add_piece_to_array(state, this.active_piece, this.piece_position);
-			if (this.ghost_piece != null && this.ghost_position != this.piece_position) {
+			if (this.show_ghost == true && this.ghost_piece != null && this.ghost_position != this.piece_position) {
 				this.add_piece_to_array(state, this.ghost_piece, this.ghost_position);
 			}
 		}
@@ -272,8 +273,9 @@ class Tetris {
 				if (this.generate_new_piece() == false) {
 					return false;
 				}
+				return true;
 			}
-			return true;
+			return false;
 		}
 	}
 }
