@@ -44,8 +44,25 @@ class Game {
 		}
 	}
 
+	check_winner(io, room, active_player_id, active_player_nb) {
+		if (active_player_id != null && active_player_nb == 1) {
+			if (Object.keys(this.players_list).length > 1 && this.winner_pause == false) {
+				this.pause();
+				this.winner_pause = true;
+				if (io != null) {
+					io.to(active_player_id).emit("winner", room.get_state(active_player_id)); // ! TO BE HANDLED ON CLIENT SIDE !!
+				}
+			}
+			this.winner = this.players_list[active_player_id].name;
+		}
+		if (active_player_nb == 0) {
+			console.log("END OF GAME");
+			this.stop(io, room);
+		}
+	}
 
-	update_players_state (io, room, testing) {
+
+	update_players_state (io, room) {
 		let active_player_nb = 0;
 		let active_player_id = null;
 		console.log("***********")
@@ -63,24 +80,13 @@ class Game {
 					if (tetris.rows_to_delete.length != 0) {
 						this.block_other_players_rows(player_id, tetris.rows_to_delete.length);
 					}
-					if (testing != true) {
+					if (io != null) {
 						io.to(player_id).emit("game_state", room.get_state(player_id));
 					}
 				}
 			}
 		}
-		if (active_player_id != null && active_player_nb == 1) {
-			if (Object.keys(this.players_list).length > 1 && this.winner_pause == false) {
-				this.pause();
-				this.winner_pause = true;
-				io.to(active_player_id).emit("winner", room.get_state(active_player_id)); // ! TO BE HANDLED ON CLIENT SIDE !!
-			} 
-			this.winner = this.players_list[active_player_id].name;
-		}
-		if (active_player_nb == 0) {
-			console.log("END OF GAME");
-			this.stop(io, room);
-		}
+		this.check_winner(io, room, active_player_id, active_player_nb);
 	}
 
 	start(io, room) {
@@ -91,9 +97,12 @@ class Game {
 	stop(io, room) {
 		this.on = false;
 		clearInterval(this.interval);
+		this.interval = null;
 		for (const player_id in this.players_list) {
 			if (Object.hasOwnProperty.call(this.players_list, player_id)) {
-				io.to(room.name).emit("game_state", room.get_state(player_id));
+				if (io != null) {
+					io.to(room.name).emit("game_state", room.get_state(player_id));
+				}
 			}
 		}
 	}
