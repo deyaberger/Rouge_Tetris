@@ -31,6 +31,9 @@ class Room {
 	}
 
 	get_state(ID) {
+		if (ID == null || this.players_list.length == 0) {
+			return {};
+		}
 		const player = this.players_list[ID];
 		const state = {
 			"game_on" : this.game.on,
