@@ -110,37 +110,41 @@ class RoomManager {
 	}
 
 
-	connect_room_player(room, player, chaussette_id) {
+	connect_room_player(room, player, chaussette) {
 		if (room.master == null) {
 			room.master = player.name;
 		}
-		room.players_list[chaussette_id] = player;
+		if (chaussette != null) {
+			room.players_list[chaussette.id] = player;
+		}
 		this.global_rooms_list[room.name] = room;
 	}
 
 
 	handle_socket_msg(msg, chaussette) {
-		if (msg.room_name == undefined || msg.player_name == undefined)
+		if ((msg.room_name == undefined || msg.player_name == undefined) && chaussette != null)
 		{
 			chaussette.emit("error", "wrong format for join_room msg");
-			return;
+			return false;
 		}
-		if (this.player_already_exists(msg.player_name))
+		if (this.player_already_exists(msg.player_name) && chaussette != null)
 		{
 			chaussette.emit("error", "sorry, this player's name is already taken");
-			return;
+			return false;
 		}
 		const room = this.find_or_create_room(msg.room_name);
-		if (!this.is_room_available(room)) 
+		if (!this.is_room_available(room) && chaussette != null) 
 		{
 			chaussette.emit("error", "sorry, this room is not available");
-			return;
+			return false;
 		}
 		const player = new Player(msg.player_name, room.game.seed);
-		this.connect_room_player(room, player, chaussette.id);
-		chaussette.join(room.name);
-		chaussette.emit("game_state", room.get_state(chaussette.id))
-		chaussette.to(room.name).emit("new_player", true);
+		this.connect_room_player(room, player, chaussette);
+		if (chaussette != null) {
+			chaussette.join(room.name);
+			chaussette.emit("game_state", room.get_state(chaussette.id))
+			chaussette.to(room.name).emit("new_player", true);
+		}
 		return room;
 	}
 
