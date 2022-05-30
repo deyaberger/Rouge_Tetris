@@ -110,15 +110,15 @@ io.on('connection', (socket) => {
 		}
 	})
 
-	socket.on('quit', () => { // ! IS there a difference with disconnect?
-		console.log("Quit  please");
-		if (room != null) {
-			console.log("Quitting");
-			console.log("room before");
-			console.log(room);
-			disconnect(room, socket);
-		}
-	});
+	// socket.on('quit', () => { // ! IS there a difference with disconnect?
+	// 	console.log("Quit  please");
+	// 	if (room != null) {
+	// 		console.log("Quitting");
+	// 		console.log("room before");
+	// 		console.log(room);
+	// 		disconnect(room, socket);
+	// 	}
+	// });
 
 	socket.on("disconnect", (reason) => {
 		console.log("A client just left");

@@ -6,7 +6,7 @@ connect to http://localhost:3000
 </br>
 
 ### PREREQUISITS:
-Create a listener with the following event name and content:
+1- Create a listener with the following event name and content:
 ```javascript
 event_name = "game_state"
 msg = {
@@ -26,6 +26,32 @@ socket.on("game_state", msg => {
 	change_layout();
 })
 ```
+2 - Create a listener to check when a player leaves:
+```javascript
+event_name = "a_player_left"
+msg = true
+```
+3 - Create a listener to check when a spectrum theme has changed:
+```javascript
+event_name = "colors_change"
+msg = true
+```
+### 0- Before Joining a room:
+When a client connects to the server he receives a message with the following info (parse it if you want to display usefull information before joining a room):
+```javascript
+event_name = "room_state"
+msg = {
+    <ROOM_NAME> : {
+			name : name // str
+			master : msters_name // str
+			players_list: {} // key: socket ID, Value: Tetris
+			game: game // object
+			colors: true // boolean
+		}  
+    }
+
+```
+
 
 ### 1- Join a room:
 Emit an event with the following name and content:
@@ -98,6 +124,6 @@ msg = true // msg has no importance
 ### 5- Quit a game:
 If you want to quit a game and go back to the home page:
 ```javascript
-event_name = "quit" // or "disconnect"
+event_name = "disconnect" // or "quit"
 msg = true // msg has no importance
 ```
