@@ -10,6 +10,7 @@
 - available rooms at the beggining
 - msg d'erreur au debut si mauvais nom de joueur
 - msg d'erreur si room pas libre
+- demander state quand reception d'un "colors_change" event
 
 
 # BACK:
@@ -17,3 +18,4 @@
 - s'assurer que le space marche une fois gere par le front
 - parse room state si besoin pour le front
 - add name proposition pour bonus
+- meilleurs messages d'erreur (wrong name, wrong room etc...)

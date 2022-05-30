@@ -122,18 +122,18 @@ class RoomManager {
 	handle_socket_msg(msg, chaussette) {
 		if ((msg.room_name == undefined || msg.player_name == undefined) && chaussette != null)
 		{
-			chaussette.emit("error", "wrong format for join_room msg");
+			chaussette.emit("format_error", "wrong format for join_room msg"); // ! IMPROVE MESSAGE FOR EASIER PARSING FOR FRONT
 			return false;
 		}
 		if (this.player_already_exists(msg.player_name) && chaussette != null)
 		{
-			chaussette.emit("error", "sorry, this player's name is already taken");
+			chaussette.emit("player_name_error", "sorry, this player's name is already taken");// ! IMPROVE MESSAGE FOR EASIER PARSING FOR FRONT
 			return false;
 		}
 		const room = this.find_or_create_room(msg.room_name);
 		if (!this.is_room_available(room) && chaussette != null) 
 		{
-			chaussette.emit("error", "sorry, this room is not available");
+			chaussette.emit("room_error", "sorry, this room is not available"); // ! IMPROVE MESSAGE FOR EASIER PARSING FOR FRONT
 			return false;
 		}
 		const player = new Player(msg.player_name, room.game.seed);

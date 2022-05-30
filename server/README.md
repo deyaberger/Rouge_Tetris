@@ -26,15 +26,26 @@ socket.on("game_state", msg => {
 	change_layout();
 })
 ```
-2 - Create a listener to check when a player leaves:
+1b - State event:
+when you send a state event, you'll receive a game_state event
+```javascript
+event_name = "state"
+msg = true // does not matter
+```
+2 - Create a listener that directly sends a "state" event to check when a player enters the room:
+```javascript
+event_name = "new_player"
+msg = true // does not matter
+```
+3 - Create a listener that directly sends a "state" event to check when a player leaves:
 ```javascript
 event_name = "a_player_left"
-msg = true
+msg = true // does not matter
 ```
-3 - Create a listener to check when a spectrum theme has changed:
+4 - Create a listener that directly sends a "state" to check when a spectrum theme has changed:
 ```javascript
 event_name = "colors_change"
-msg = true
+msg = true // does not matter
 ```
 ### 0- Before Joining a room:
 When a client connects to the server he receives a message with the following info (parse it if you want to display usefull information before joining a room):
