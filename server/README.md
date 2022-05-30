@@ -39,7 +39,7 @@ msg = true
 ### 0- Before Joining a room:
 When a client connects to the server he receives a message with the following info (parse it if you want to display usefull information before joining a room):
 ```javascript
-event_name = "room_state"
+event_name = "room_state" // ! Check : maybe parse it before sending it
 msg = {
     <ROOM_NAME> : {
 			name : name // str
