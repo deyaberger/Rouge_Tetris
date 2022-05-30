@@ -15,7 +15,7 @@ class Tetris {
 		this.rows_to_block = 0;
 		this.spectre_limit = [20,20,20,20,20,20,20,20,20,20];
 		this.ghost_piece = null;
-		this.show_ghost = false;
+		this.show_ghost = true;
 	}
 
 	full_clean() {

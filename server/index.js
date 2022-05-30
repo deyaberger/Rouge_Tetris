@@ -41,18 +41,18 @@ io.on('connection', (socket) => {
 		}
 	});
 
-	socket.on('start', (msg) => {
-		console.log("starting");
-		if (room != null && room.master == player.name) {
-			room.game.on = true;
-		room.game.start(io, room); }
-	})
-
 	socket.on('state', (msg) => {
 		console.log("Stattte please");
 		if (room != null) {
 			socket.emit("game_state", room.get_state(socket.id));
 		}
+	})
+
+	socket.on('start', (msg) => {
+		console.log("starting");
+		if (room != null && room.master == player.name) {
+			room.game.on = true;
+		room.game.start(io, room); }
 	})
 
 	socket.on('pause', (msg) => {
@@ -62,26 +62,36 @@ io.on('connection', (socket) => {
 		}
 	})
 
-	socket.on('continue', (msg) => {
+	socket.on('continue', (msg) => { // ! We could make it just one msg with pause = false or true
 		console.log("continue please");
 		if (room != null && msg == true) {
 			room.game.start(io, room);
 		}
 	})
 
-	socket.on('colors', (msg) => {
-		console.log("colors please");
-		if (room != null) {
-			room.colors = msg;
-			socket.to(room.name).emit("a_player_left", true); //! Change event name!!
-		}
-	})
-
+	
 	socket.on('move', (msg) => {
 		// console.log("Move  please");
 		if (room != null && player != null && room.game.on == true) {
 			player.tetris.apply_move(msg);
 			socket.emit("game_state", room.get_state(socket.id));
+		}
+
+	})
+
+	socket.on('colors', (msg) => {
+		console.log("colors please");
+		if (room != null) {
+			room.colors = msg;
+			socket.to(room.name).emit("a_player_left", true); //! Change event name!! Or make it individual
+		}
+	})
+
+	socket.on('ghost', (msg) => {
+		// console.log("Move  please");
+		if (room != null && player != null && room.game.on == true) {
+			player.tetris.show_ghost = msg;
+			socket.emit("game_state", room.get_state(socket.id)); // ! Change if you want to make it general for all players
 		}
 
 	})
@@ -100,7 +110,7 @@ io.on('connection', (socket) => {
 		}
 	})
 
-	socket.on('quit', () => {
+	socket.on('quit', () => { // ! IS there a difference with disconnect?
 		console.log("Quit  please");
 		if (room != null) {
 			console.log("Quitting");

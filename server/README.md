@@ -42,7 +42,7 @@ socket.emit('join_room', msg);
 ```
 </br>
 
-### 2- Start game:
+### 2- Start a game:
 Emit an event with the following name and content:
 ```javascript
 event_name = "start"
@@ -50,8 +50,54 @@ msg = true
 ```
 
 ### 3- During the game:
+**Make a move:**</br>
 If you want to make moves, emit an event with the following name and content:
 ```javascript
 event_name = "move"
 msg = "down" // or "left", "right", "rotate", "space"
+```
+**Other Players Spectrums:**</br>
+Show just the shadow of other players tetris or show the complete tetris with the moving piece of the other players:
+```javascript
+event_name = "colors"
+msg = true // true for full tetris, false for just spectrum
+```
+**Tetris ghost:**</br>
+Show or hide the current piece shadow:
+```javascript
+event_name = "ghost"
+msg = true // true for showing the shadow, false for not showing it
+```
+
+### 4- Pause, Stop, Restart game:
+**Pause game:**</br>
+If you want to pause the game (make it possible only for master):
+```javascript
+event_name = "pause"
+msg = true // msg has no importance
+```
+**Continue game:**</br>
+If you want to continue the game after pausing it:
+```javascript
+event_name = "continue"
+msg = true // msg has no importance
+```
+**Stop game:**</br>
+If you want to stop (end) the game that has already started (only available for master):
+```javascript
+event_name = "stop"
+msg = true // msg has no importance
+```
+**Restart game:**</br>
+If you want to restart the game that has been stoped or finished (same room, same player, different pieces):
+```javascript
+event_name = "restart"
+msg = true // msg has no importance
+```
+
+### 5- Quit a game:
+If you want to quit a game and go back to the home page:
+```javascript
+event_name = "quit" // or "disconnect"
+msg = true // msg has no importance
 ```
