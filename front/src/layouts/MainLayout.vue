@@ -91,10 +91,10 @@ export default defineComponent({
   },
   methods: {
     playGame() {
-      this.$socket.emit('pause');
+      this.$socket.emit('pause', true);
     },
     pauseGame() {
-      this.$socket.emit('continue');
+      this.$socket.emit('pause', false);
     },
     playMusic() {
       this.audio.play();
