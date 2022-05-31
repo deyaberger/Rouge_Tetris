@@ -98,7 +98,7 @@ export default defineComponent({
     },
     handleSpace() {
       if (this.gameOn) {
-        this.$socket.emit('join_room', 'space');
+        this.$socket.emit('move', 'space');
       }
     },
     handleDown() {

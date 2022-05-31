@@ -19,7 +19,7 @@
           :icon="'volume_up'"
           @click="mute"/>
         <q-btn
-          v-show="isInGame"
+          v-show="gameOn"
           flat
           label="Quit Room"
           @click="quitRoom"/>
@@ -61,7 +61,7 @@ export default defineComponent({
       return this.$store.getters['game/getGameOn'];
     },
     isInGame() {
-      return (this.room.length > 0 && this.player.length > 0);
+      return (this.room && this.player);
     },
   },
   methods: {
@@ -84,8 +84,8 @@ export default defineComponent({
       this.isPlaying = false;
     },
     quitRoom() {
-      this.$store.dispatch('game/quit');
       this.$socket.emit('quit');
+      this.$store.dispatch('game/quit');
     },
   },
   watch: {
