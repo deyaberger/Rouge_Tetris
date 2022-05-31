@@ -57,14 +57,14 @@ io.on('connection', (socket) => {
 
 	socket.on('pause', (msg) => {
 		console.log("pause please");
-		if (room != null && msg == true) {
+		if (room != null) {
 			room.game.pause();
 		}
 	})
 
 	socket.on('continue', (msg) => { // ! We could make it just one msg with pause = false or true
 		console.log("continue please");
-		if (room != null && msg == true) {
+		if (room != null) {
 			room.game.start(io, room);
 		}
 	})
