@@ -12,6 +12,7 @@
 - msg d'erreur au debut si mauvais nom de joueur
 - msg d'erreur si room pas libre
 - demander state quand reception d'un "colors_change" event
+- remove "spectre details" if no spectres
 
 
 # BACK:

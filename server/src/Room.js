@@ -2,13 +2,17 @@ const { Player } = require("./Player.js");
 const { Game } = require("./Game.js");
 const { randomBytes } = require("crypto");
 
+const EASY = 1
+const MEIDUM = 2
+const HARD = 3
 
 class Room {
-	constructor(name) {
+	constructor(name, difficulty) {
+		this.difficulty = difficulty
 		this.name = name;
 		this.master = null;
 		this.players_list = {};
-		this.game = new Game(this.players_list);
+		this.game = new Game(this.players_list, difficulty);
 		this.colors = false;
 	}
 
@@ -63,7 +67,9 @@ class Room {
 				this.master = this.players_list[next_key].name;
 			}
 		}
-		socket.to(this.name).emit("a_player_left", true); 
+		if (this.master != null) {
+			socket.to(this.name).emit("a_player_left", true); 
+		}
 	}
 
 }
@@ -82,7 +88,7 @@ class RoomManager {
 	find_or_create_room(room_name) {
 		let room = this.global_rooms_list[room_name];
 		if (room == undefined) {
-			room = new Room(room_name);
+			room = new Room(room_name, this.difficulty);
 		}
 		return room;
 	}
@@ -108,6 +114,16 @@ class RoomManager {
 		return (suggested_name)
 	}
 
+	find_random_name_room(room_name) {
+		let suggested_name = room_name + Math.round(Math.random() * 100).toString()
+		let room = this.global_rooms_list[suggested_name];
+		while (room !== undefined) {
+			suggested_name = room.name + Math.round(Math.random() * 100).toString()
+			room = this.global_rooms_list[suggested_name];
+		}
+		return (suggested_name)
+	}
+
 	is_room_available(room)
 	{
 		if (room.game.on == false) {
@@ -127,25 +143,35 @@ class RoomManager {
 		this.global_rooms_list[room.name] = room;
 	}
 
+	set_difficulty(msg) {
+		this.difficulty = msg.difficulty == undefined ? EASY : msg.difficulty
+	}
+
 
 	handle_socket_msg(msg, chaussette) {
+		console.log(msg);
+		console.log(chaussette.id);
 		if ((msg.room_name == undefined || msg.player_name == undefined) && chaussette != null)
 		{
-			chaussette.emit("format_error", "wrong format for join_room msg"); // ! IMPROVE MESSAGE FOR EASIER PARSING FOR FRONT
+			chaussette.emit("format_error", "wrong format for join_room msg");
 			return false;
 		}
+		this.set_difficulty(msg);
 		if (this.player_already_exists(msg.player_name) && chaussette != null)
 		{
 			var suggested_name = this.find_random_name(msg.player_name);
-			console.log("suggested name:")
-			console.log(suggested_name)
-			chaussette.emit("player_name_error", suggested_name);// ! IMPROVE MESSAGE FOR EASIER PARSING FOR FRONT
+			chaussette.emit("player_name_error", suggested_name);
+			console.log("RETURNING FALSE BECAUSE OF PLAYER NAME")
 			return false;
 		}
 		const room = this.find_or_create_room(msg.room_name);
 		if (!this.is_room_available(room) && chaussette != null) 
 		{
-			chaussette.emit("room_error", "sorry, this room is not available"); // ! IMPROVE MESSAGE FOR EASIER PARSING FOR FRONT
+			var suggested_name = this.find_random_name_room(msg.room_name);
+			console.log("suggested name")
+			console.log(suggested_name)
+			chaussette.emit("room_error", suggested_name);
+			console.log("RETURNING FALSE BECAUSE OF ROOM NAME")
 			return false;
 		}
 		const player = new Player(msg.player_name, room.game.seed);

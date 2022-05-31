@@ -42,15 +42,15 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('state', (msg) => {
-		console.log("Stattte please");
-		if (room != null) {
+		if (room != null && player != null) {
+			console.log("Stattte please");
 			socket.emit("game_state", room.get_state(socket.id));
 		}
 	})
 
 	socket.on('start', (msg) => {
-		console.log("starting");
 		if (room != null && room.master == player.name) {
+			console.log("starting");
 			room.game.on = true;
 		room.game.start(io, room); }
 	})
@@ -88,7 +88,7 @@ io.on('connection', (socket) => {
 	})
 
 	socket.on('ghost', (msg) => {
-		// console.log("Move  please");
+		console.log("ghost please");
 		if (room != null && player != null && room.game.on == true) {
 			player.tetris.show_ghost = msg;
 			socket.emit("game_state", room.get_state(socket.id)); // ! Change if you want to make it general for all players
@@ -110,15 +110,12 @@ io.on('connection', (socket) => {
 		}
 	})
 
-	// socket.on('quit', () => { // ! IS there a difference with disconnect?
-	// 	console.log("Quit  please");
-	// 	if (room != null) {
-	// 		console.log("Quitting");
-	// 		console.log("room before");
-	// 		console.log(room);
-	// 		disconnect(room, socket);
-	// 	}
-	// });
+	socket.on('quit', () => { // ! IS there a difference with disconnect?
+		console.log("Quit  please");
+		if (room != null) {
+			disconnect(room, socket);
+		}
+	});
 
 	socket.on("disconnect", (reason) => {
 		console.log("A client just left");

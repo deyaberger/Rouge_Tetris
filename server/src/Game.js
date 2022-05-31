@@ -1,35 +1,19 @@
 const seedrandom = require('seedrandom');
 const { Tetris } = require("./Tetris")
 
+const MEDIUM = 2
+const HARD = 3
 
 class Game {
-	constructor(players_list) {
+	constructor(players_list, difficulty) {
 		this.on = false;
 		this.winner = null;
 		this.seed = Math.random();
 		this.players_list = players_list;
 		this.winner_pause = false;
 		this.interval = null;
-		// this.show_ghost = false;
+		this.difficulty = difficulty;
 	}
-
-	// print_state(tetris) {
-	// 	let state = tetris.get_state();
-	// 	for (let i = 0; i < tetris.max_row; i++) {
-	// 		for (let j = 0; j < tetris.max_col; j++) {
-	// 			if (state[i][j] != 0 && state[i][j] != -1) {
-	// 				process.stdout.write(`\x1b[33m ${state[i][j]} \x1b[0m`);
-	// 			}
-	// 			else if (state[i][j] == -1) {
-	// 				process.stdout.write(`\x1b[37m${state[i][j]} \x1b[0m`);
-	// 			}
-	// 			else {
-	// 				process.stdout.write(` ${state[i][j]} `);
-	// 			}
-	// 		}
-	// 		console.log("");
-	// 	}
-	// }
 
 	block_other_players_rows(who_did_zat, nb_rows) {
 		for (const player_id in this.players_list) {
@@ -50,13 +34,16 @@ class Game {
 				this.pause();
 				this.winner_pause = true;
 				if (io != null) {
+					io.to(room.name).emit("game_state", room.get_state(active_player_id));
 					io.to(active_player_id).emit("winner", room.get_state(active_player_id)); // ! TO BE HANDLED ON CLIENT SIDE !!
 				}
 			}
 			this.winner = this.players_list[active_player_id].name;
 		}
+		console.log("active_player_nb")
+		console.log(active_player_nb)
 		if (active_player_nb == 0) {
-			console.log("END OF GAME");
+			console.log("END OF GAME for real");
 			this.stop(io, room);
 		}
 	}
@@ -91,7 +78,14 @@ class Game {
 
 	start(io, room) {
 		this.on = true;
-		this.interval = setInterval(() => this.update_players_state(io, room), 1000);
+		let time_to_wait = 1000
+		if (this.difficulty == MEDIUM) {
+			time_to_wait = 500
+		}
+		else if (this.difficulty == HARD) {
+			time_to_wait = 200
+		}
+		this.interval = setInterval(() => this.update_players_state(io, room), time_to_wait);
 	}
 
 	stop(io, room) {
