@@ -43,6 +43,7 @@ export default {
   methods: {
     quit() {
       this.$store.dispatch('game/quit');
+      this.$store.dispatch('error/clear');
       this.$socket.emit('quit');
     },
   },

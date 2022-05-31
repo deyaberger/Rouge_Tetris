@@ -24,5 +24,10 @@ export default function createWebSocketPlugin() {
       const ret = socket.emit('state', 'colors_change');
       console.log('ret', ret);
     });
+
+    socket.on('player_name_error', (event) => {
+      console.log('player_name_error', event);
+      store.dispatch('error/player', event);
+    });
   };
 }

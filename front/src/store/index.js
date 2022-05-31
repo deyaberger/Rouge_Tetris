@@ -2,6 +2,7 @@ import { store } from 'quasar/wrappers';
 import { createStore } from 'vuex';
 
 import game from './game';
+import error from './error';
 
 import createWebSocketPlugin from '../plugins/socket.js';
 
@@ -9,6 +10,7 @@ export default store((/* { ssrContext } */) => {
   const Store = createStore({
     modules: {
       game,
+      error,
     },
     plugins: [createWebSocketPlugin()],
 

@@ -8,16 +8,32 @@
         </h2>
       </div>
       <div class="q-ma-sm row justify-center">
-        <q-input
-          color="primary"
-          square outlined
-          v-model="playerName" label="Player Name"/>
+        <div class="col" style="max-width: 300px">
+          <q-input
+            class="q-ma-sm row justify-center"
+            color="primary"
+            square outlined
+            v-model="playerName" label="Player Name"/>
+          <div
+            v-show="playerError"
+            class="q-ma-sm row justify-center text-accent">
+            {{ `Player name already taken try: ${playerError}` }}
+          </div>
+        </div>
       </div>
       <div class="q-ma-sm row justify-center">
-        <q-input
-          color="primary"
-          square outlined
-          v-model="roomName" label="Room Name"/>
+        <div class="col" style="max-width: 300px">
+          <q-input
+            class="q-ma-sm row justify-center"
+            color="primary"
+            square outlined
+            v-model="roomName" label="Room Name"/>
+          <div
+            v-show="roomError"
+            class="q-ma-sm row justify-center text-accent">
+            {{ `Room name already taken try: ${roomError}` }}
+          </div>
+        </div>
       </div>
 
       <div class="row justify-center">
@@ -71,6 +87,12 @@ export default {
     },
     isEmpty() {
       return this.playerName.length === 0 || this.roomName.length === 0;
+    },
+    playerError() {
+      return this.$store.getters['error/getPlayerError'];
+    },
+    roomError() {
+      return this.$store.getters['error/getRoomError'];
     },
   },
   methods: {

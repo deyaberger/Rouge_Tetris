@@ -86,6 +86,7 @@ export default defineComponent({
     },
     quitRoom() {
       this.$socket.emit('quit');
+      this.$store.dispatch('error/clear');
       this.$store.dispatch('game/quit');
     },
   },
