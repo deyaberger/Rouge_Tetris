@@ -7,6 +7,7 @@ const HARD = 3
 class Game {
 	constructor(players_list, difficulty) {
 		this.on = false;
+		this.paused = false;
 		this.winner = null;
 		this.seed = Math.random();
 		this.players_list = players_list;
@@ -76,6 +77,7 @@ class Game {
 
 	start(io, room) {
 		this.on = true;
+		this.paused = false;
 		let time_to_wait = 1000
 		if (this.difficulty == MEDIUM) {
 			time_to_wait = 500
@@ -113,6 +115,7 @@ class Game {
 
 	pause(io, room_name) {
 		this.on = false;
+		this.paused = true;
 		clearInterval(this.interval);
 		this.interval = null;
 		io.to(room_name).emit("pause", true);
