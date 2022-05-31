@@ -1,5 +1,6 @@
 const { Player } = require("./Player.js");
 const { Game } = require("./Game.js");
+const { randomBytes } = require("crypto");
 
 
 class Room {
@@ -99,6 +100,14 @@ class RoomManager {
 		return false;
 	}
 
+	find_random_name(base_name) {
+		let suggested_name = base_name + Math.round(Math.random() * 100).toString()
+		while (this.player_already_exists(suggested_name) === true) {
+			suggested_name = base_name + Math.round(Math.random() * 100).toString()
+		}
+		return (suggested_name)
+	}
+
 	is_room_available(room)
 	{
 		if (room.game.on == false) {
@@ -127,7 +136,10 @@ class RoomManager {
 		}
 		if (this.player_already_exists(msg.player_name) && chaussette != null)
 		{
-			chaussette.emit("player_name_error", "sorry, this player's name is already taken");// ! IMPROVE MESSAGE FOR EASIER PARSING FOR FRONT
+			var suggested_name = this.find_random_name(msg.player_name);
+			console.log("suggested name:")
+			console.log(suggested_name)
+			chaussette.emit("player_name_error", suggested_name);// ! IMPROVE MESSAGE FOR EASIER PARSING FOR FRONT
 			return false;
 		}
 		const room = this.find_or_create_room(msg.room_name);

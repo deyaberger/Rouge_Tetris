@@ -3,6 +3,5 @@ export function processGameState({ commit }, gameState) {
 }
 
 export function quit({ commit }) {
-  this.$socket.emit('quit');
   commit('quit');
 }
