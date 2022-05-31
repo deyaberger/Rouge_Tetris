@@ -86,7 +86,7 @@ io.on('connection', (socket) => {
 		console.log("colors please");
 		if (room != null) {
 			room.colors = msg;
-			socket.to(room.name).emit("a_player_left", true); //! Change event name!! Or make it individual
+			socket.to(room.name).emit("state_ping"); //! Change event name!! Or make it individual
 		}
 	})
 
