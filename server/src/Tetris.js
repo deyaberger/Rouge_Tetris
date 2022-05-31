@@ -165,6 +165,10 @@ class Tetris {
 	}
 
 	get_highest_hit(piece, piece_position) {
+		console.log("PIECE POS:")
+		console.log(piece_position)
+		console.log("PIECE:")
+		console.log(piece.x)
 		var start = piece_position[1] >= 0 ? piece_position[1] : 0;
 		var end = 0 + piece_position[1] + piece.size[0];
 		var sliced = this.spectre_limit.slice(start, end);
