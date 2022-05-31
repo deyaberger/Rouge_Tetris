@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
 	socket.on('pause', (msg) => {
 		console.log("pause please");
 		if (room != null) {
-			room.game.pause();
+			room.game.pause(socket, room.name);
 		}
 	})
 
