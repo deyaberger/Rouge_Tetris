@@ -28,7 +28,10 @@ function disconnect(room, socket) {
 
 io.on('connection', (socket) => {
 	console.log('a user connected');
-	socket.emit("room_state", room_manager.get_state());
+
+	socket.on("room_info", () => {
+		socket.emit("room_state", room_manager.get_state());
+	});
 
 	var room = null;
 	var player = null;
