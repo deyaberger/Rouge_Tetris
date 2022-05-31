@@ -114,7 +114,7 @@ class Game {
 	}
 
 	pause(io, room_name) {
-		this.on = false;
+		// this.on = false;
 		this.paused = true;
 		clearInterval(this.interval);
 		this.interval = null;
