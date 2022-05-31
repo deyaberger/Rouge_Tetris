@@ -8,21 +8,34 @@
         <q-toolbar-title>
           <span class="text-secondary text-bold">{{ room }}</span>
         </q-toolbar-title>
-        <q-btn
-          v-if="isMuted"
-          flat
-          :icon="'volume_off'"
-          @click="mute"/>
-        <q-btn
-          v-else
-          flat
-          :icon="'volume_up'"
-          @click="mute"/>
-        <q-btn
-          v-show="gameOn"
-          flat
-          label="Quit Room"
-          @click="quitRoom"/>
+        <template v-if="isInGame">
+          <template v-if="master === player">
+            <q-btn
+              v-if="gameOn"
+              flat
+              :icon="'pause'"
+              @click="pauseGame"/>
+            <q-btn
+              v-else
+              flat
+              :icon="'play_arrow'"
+              @click="playGame"/>
+          </template>
+          <q-btn
+            v-if="isMuted"
+            flat
+            :icon="'volume_off'"
+            @click="mute"/>
+          <q-btn
+            v-else
+            flat
+            :icon="'volume_up'"
+            @click="mute"/>
+          <q-btn
+            flat
+            label="Quit Room"
+            @click="quitRoom"/>
+        </template>
       </q-toolbar>
     </q-header>
 
@@ -55,18 +68,27 @@ export default defineComponent({
     room() {
       return this.$store.getters['game/getRoomName'];
     },
-    payer() {
+    player() {
       return this.$store.getters['game/getPlayerName'];
+    },
+    master() {
+      return this.$store.getters['game/getMaster'];
     },
     gameOn() {
       return this.$store.getters['game/getGameOn'];
     },
     isInGame() {
-      return (this.room && this.player);
+      return this.room && this.player;
     },
   },
   methods: {
-    play() {
+    playGame() {
+      this.$socket.emit('pause');
+    },
+    pauseGame() {
+      this.$socket.emit('continue');
+    },
+    playMusic() {
       this.audio.play();
       this.isPlaying = true;
     },
@@ -93,7 +115,7 @@ export default defineComponent({
   watch: {
     gameOn(val) {
       if (val) {
-        this.play();
+        this.playMusic();
       } else {
         this.stop();
       }

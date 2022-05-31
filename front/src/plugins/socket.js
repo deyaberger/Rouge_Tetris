@@ -29,5 +29,10 @@ export default function createWebSocketPlugin() {
       console.log('player_name_error', event);
       store.dispatch('error/player', event);
     });
+
+    socket.on('player_room_error', (event) => {
+      console.log('player_room_error', event);
+      store.dispatch('error/room', event);
+    });
   };
 }
