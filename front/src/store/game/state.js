@@ -12,5 +12,6 @@ export default function () {
     tetris: [],
     winner: null,
     colors: false,
+    roomState: {},
   };
 }

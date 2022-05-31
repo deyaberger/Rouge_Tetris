@@ -65,6 +65,7 @@ export default {
     };
   },
   created() {
+    this.$socket.emit('room_info');
     window.addEventListener('keydown', (e) => {
       if (['Enter'].includes(e.code)) {
         e.preventDefault();

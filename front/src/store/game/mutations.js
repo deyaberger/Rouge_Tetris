@@ -11,6 +11,10 @@ export function setGameState(state, gameState) {
   state.winner = gameState.winner;
 }
 
+export function setRoomState(state, roomState) {
+  state.roomState = roomState;
+}
+
 export function quit(state) {
   state.gameOn = false;
   state.master = '';

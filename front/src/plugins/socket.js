@@ -7,6 +7,11 @@ export default function createWebSocketPlugin() {
       store.dispatch('game/processGameState', ret);
     });
 
+    socket.on('room_state', (ret) => {
+      console.log('room_state', ret);
+      store.dispatch('game/setRoomState', ret);
+    });
+
     socket.on('new_player', () => {
       console.log('joined');
       const ret = socket.emit('state', 'new_player');
@@ -16,6 +21,12 @@ export default function createWebSocketPlugin() {
     socket.on('a_player_left', () => {
       console.log('left');
       const ret = socket.emit('state', 'a_player_left');
+      console.log('ret', ret);
+    });
+
+    socket.on('pause', () => {
+      console.log('left');
+      const ret = socket.emit('state', 'paused');
       console.log('ret', ret);
     });
 

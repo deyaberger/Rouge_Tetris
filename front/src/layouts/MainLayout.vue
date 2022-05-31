@@ -36,6 +36,11 @@
             label="Quit Room"
             @click="quitRoom"/>
         </template>
+        <template v-else>
+          <div v-if="!gameOn">
+            Paused
+          </div>
+        </template>
       </q-toolbar>
     </q-header>
 
