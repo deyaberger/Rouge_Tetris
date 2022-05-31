@@ -69,7 +69,7 @@ class Room {
 			}
 		}
 		if (this.master != null) {
-			socket.to(this.name).emit("a_player_left", true); 
+			socket.to(this.name).emit("state_ping");
 		}
 	}
 
@@ -180,7 +180,7 @@ class RoomManager {
 		if (chaussette != null) {
 			chaussette.join(room.name);
 			chaussette.emit("game_state", room.get_state(chaussette.id))
-			chaussette.to(room.name).emit("new_player", true);
+			chaussette.to(room.name).emit("state_ping");
 		}
 		return room;
 	}

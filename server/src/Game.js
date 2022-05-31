@@ -34,9 +34,9 @@ class Game {
 			if (Object.keys(this.players_list).length > 1 && this.winner_pause == false) {
 				this.pause(active_player_id, room.name);
 				this.winner_pause = true;
-				if (io != null) {
-					io.to(active_player_id).emit("winner", room.get_state(active_player_id)); // ! TO BE HANDLED ON CLIENT SIDE !!
-				}
+				// if (io != null) {/
+					// io.to(active_player_id).emit("winner", room.get_state(active_player_id)); // ! TO BE HANDLED ON CLIENT SIDE !!
+				// }
 			}
 			this.winner = this.players_list[active_player_id].name;
 		}
@@ -61,7 +61,7 @@ class Game {
 					tetris.clean();
 					if (tetris.apply_move("time") == false) {
 						this.players_list[player_id].lost = true;
-						io.to(player_id).emit("loser", room.get_state(player_id)); // ! TO BE HANDLED ON CLIENT SIDE !!
+						// io.to(player_id).emit("loser", room.get_state(player_id)); // ! TO BE HANDLED ON CLIENT SIDE !!
 					}
 					if (tetris.rows_to_delete.length != 0) {
 						this.block_other_players_rows(player_id, tetris.rows_to_delete.length);
@@ -118,7 +118,7 @@ class Game {
 		this.paused = true;
 		clearInterval(this.interval);
 		this.interval = null;
-		io.to(room_name).emit("pause", true);
+		io.to(room_name).emit("state_ping");
 	}
 
 }

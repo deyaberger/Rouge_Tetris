@@ -44,7 +44,7 @@ io.on('connection', (socket) => {
 		}
 	});
 
-	socket.on('state', (msg) => {
+	socket.on('state_pong', (msg) => {
 		if (room != null && player != null) {
 			console.log("Stattte please");
 			socket.emit("game_state", room.get_state(socket.id));
