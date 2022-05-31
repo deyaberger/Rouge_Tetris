@@ -13,7 +13,7 @@ class Tetris {
 		this.spectre = create_2d_array(this.max_row, this.max_col);
 		this.rows_to_delete = [];
 		this.rows_to_block = 0;
-		this.spectre_limit = [20,20,20,20,20,20,20,20,20,20];
+		this.spectre_limit = [20,20,20,20,20,20,20,20,20,20]; //Key: index of columns, Values: index of rows (starts a 20, because the tetris is empty, so the first colision will occur at the 19th row) 
 		this.ghost_piece = null;
 		this.show_ghost = true;
 	}
@@ -165,14 +165,11 @@ class Tetris {
 	}
 
 	get_highest_hit(piece, piece_position) {
-		console.log("PIECE POS:")
-		console.log(piece_position)
-		console.log("PIECE:")
-		console.log(piece.x)
 		var start = piece_position[1] >= 0 ? piece_position[1] : 0;
 		var end = 0 + piece_position[1] + piece.size[0];
 		var sliced = this.spectre_limit.slice(start, end);
 		var highest_hit = Math.min.apply(Math, sliced);
+		highest_hit = highest_hit - piece.size[0] >= 0 ? highest_hit - piece.size[0] : 0;
 		return highest_hit;
 	}
 

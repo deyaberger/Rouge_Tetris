@@ -15,7 +15,6 @@
 
 
 # BACK:
-- gere erreur du ghost qui ne s'arrete pas au bon endroit
 - s'assurer que le space marche une fois gere par le front
 - parse room state si besoin pour le front
 - add name proposition pour bonus

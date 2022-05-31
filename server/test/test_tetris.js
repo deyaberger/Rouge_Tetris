@@ -184,6 +184,7 @@ describe('Tetris', function () {
 			tetris.background = copy_array(ghost_test, max_row, max_col);
 			tetris.active_piece = new Piece(2, 3);
 			tetris.piece_position = [5,3];
+			tetris.update_spectre();
 			tetris.get_ghost(tetris.active_piece, tetris.piece_position)
 			assert.equal(JSON.stringify(tetris.ghost_position), JSON.stringify([15,3]));
 		});
