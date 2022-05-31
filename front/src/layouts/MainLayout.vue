@@ -21,6 +21,11 @@
               :icon="'play_arrow'"
               @click="pauseGame"/>
           </template>
+          <template v-else>
+            <div v-if="gamePaused">
+             Game paused
+            </div>
+          </template>
           <q-btn
             v-if="isMuted"
             flat
@@ -35,11 +40,6 @@
             flat
             label="Quit Room"
             @click="quitRoom"/>
-        </template>
-        <template v-else>
-          <div v-if="gamePaused">
-            Paused
-          </div>
         </template>
       </q-toolbar>
     </q-header>
@@ -66,7 +66,7 @@ export default defineComponent({
     // eslint-disable-next-line
     this.audio = new Audio(require('../assets/stronger-tetris.mp3'));
     this.audio.loop = true;
-    this.audio.volume = 0.2;
+    this.audio.volume = 0.1;
     this.mute();
   },
   computed: {

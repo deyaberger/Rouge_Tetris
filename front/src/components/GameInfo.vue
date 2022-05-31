@@ -15,6 +15,10 @@
         <span class="text-bold">Spectres details :</span>
         <q-toggle color="secondary" v-model="details"/>
       </div>
+      <div v-if="gamePaused" class="row q-my-md">
+        <span class="text-bold">Game paused : </span>
+        Waiting for master
+      </div>
     </q-card-section>
   </q-card>
 </template>
@@ -29,6 +33,9 @@ export default {
     };
   },
   computed: {
+    gamePaused() {
+      return this.$store.getters['game/getGamePaused'];
+    },
     room() {
       return this.$store.getters['game/getRoomName'];
     },
