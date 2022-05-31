@@ -2,6 +2,10 @@ export function getGameOn(state) {
   return state.gameOn;
 }
 
+export function getGamePaused(state) {
+  return state.gamePaused;
+}
+
 export function getRoomName(state) {
   return state.roomName;
 }

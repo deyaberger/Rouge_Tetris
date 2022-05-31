@@ -1,5 +1,6 @@
 export function setGameState(state, gameState) {
   state.gameOn = gameState.game_on;
+  state.gamePaused = gameState.game_pause;
   state.master = gameState.master;
   state.playerHasLost = gameState.player_has_lost;
   state.playerName = gameState.player_name;

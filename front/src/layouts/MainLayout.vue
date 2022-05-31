@@ -11,7 +11,7 @@
         <template v-if="isInGame">
           <template v-if="master === player">
             <q-btn
-              v-if="gameOn"
+              v-if="!gamePaused"
               flat
               :icon="'pause'"
               @click="playGame"/>
@@ -37,7 +37,7 @@
             @click="quitRoom"/>
         </template>
         <template v-else>
-          <div v-if="!gameOn">
+          <div v-if="gamePaused">
             Paused
           </div>
         </template>
@@ -81,6 +81,9 @@ export default defineComponent({
     },
     gameOn() {
       return this.$store.getters['game/getGameOn'];
+    },
+    gamePaused() {
+      return this.$store.getters['game/getGamePaused'];
     },
     isInGame() {
       return this.room && this.player;
