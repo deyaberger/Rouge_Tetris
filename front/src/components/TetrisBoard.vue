@@ -9,6 +9,8 @@
 </template>
 
 <style lang="sass" scoped>
+.shadow
+  background-color: $shadow
 .blocked
   background-color: $blocked
 .empty
