@@ -14,12 +14,12 @@
               v-if="gameOn"
               flat
               :icon="'pause'"
-              @click="pauseGame"/>
+              @click="playGame"/>
             <q-btn
               v-else
               flat
               :icon="'play_arrow'"
-              @click="playGame"/>
+              @click="pauseGame"/>
           </template>
           <q-btn
             v-if="isMuted"
