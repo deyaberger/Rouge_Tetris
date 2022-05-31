@@ -34,14 +34,11 @@ class Game {
 				this.pause();
 				this.winner_pause = true;
 				if (io != null) {
-					io.to(room.name).emit("game_state", room.get_state(active_player_id));
 					io.to(active_player_id).emit("winner", room.get_state(active_player_id)); // ! TO BE HANDLED ON CLIENT SIDE !!
 				}
 			}
 			this.winner = this.players_list[active_player_id].name;
 		}
-		console.log("active_player_nb")
-		console.log(active_player_nb)
 		if (active_player_nb == 0) {
 			console.log("END OF GAME for real");
 			this.stop(io, room);
@@ -63,6 +60,7 @@ class Game {
 					tetris.clean();
 					if (tetris.apply_move("time") == false) {
 						this.players_list[player_id].lost = true;
+						io.to(player_id).emit("loser", room.get_state(player_id)); // ! TO BE HANDLED ON CLIENT SIDE !!
 					}
 					if (tetris.rows_to_delete.length != 0) {
 						this.block_other_players_rows(player_id, tetris.rows_to_delete.length);
