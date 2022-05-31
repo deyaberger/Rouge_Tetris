@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
 	socket.on('join_room', (msg) => {
 		console.log("Joining Room");
 		room = room_manager.handle_socket_msg(msg, socket);
-		if (room != null) {
+		if (room != null && room != false) {
 			player = room.players_list[socket.id];
 			console.log(room_manager.global_rooms_list)
 		}
