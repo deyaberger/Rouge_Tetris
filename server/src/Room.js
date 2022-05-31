@@ -40,7 +40,7 @@ class Room {
 		const player = this.players_list[ID];
 		const state = {
 			"game_on" : this.game.on,
-			"pause" : this.game.paused,
+			"game_pause" : this.game.paused,
 			"room_name" : this.name,
 			"player_name" : player.name,
 			"player_has_lost" : player.lost,
