@@ -1,3 +1,7 @@
+export function getRoomState(state) {
+  return state.roomState;
+}
+
 export function getGameOn(state) {
   return state.gameOn;
 }

@@ -44,6 +44,25 @@
           class="text-primary"
           label="GO"/>
       </div>
+        <div class="q-ma-md text-primary">
+          Rooms:
+        </div>
+        <q-list bordered separator>
+          <q-item
+            v-for="(room, index) in rooms" :key="index"
+            @click="roomName = room.name" clickable v-ripple>
+            <q-item-section>
+              <q-item-label>{{ room.name }}</q-item-label>
+              <q-item-label caption>{{ room.master }}</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-item-label v-if="room.game.on" caption class="text-red">playing</q-item-label>
+              <q-item-label v-else caption class="text-green">joinable</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      <div>
+      </div>
     </div>
     <q-circular-progress
       v-else
@@ -79,6 +98,9 @@ export default {
   computed: {
     room() {
       return this.$store.getters['game/getRoomName'];
+    },
+    rooms() {
+      return this.$store.getters['game/getRoomState'];
     },
     player() {
       return this.$store.getters['game/getPlayerName'];
