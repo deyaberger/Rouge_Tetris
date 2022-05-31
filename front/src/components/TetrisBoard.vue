@@ -46,6 +46,7 @@ export default {
   methods: {
     getColor(value) {
       return {
+        shadow: value === -2,
         blocked: value === -1,
         empty: value === 0,
         turquoise: value === 1,

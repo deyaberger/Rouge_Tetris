@@ -119,7 +119,7 @@ export default {
       immediate: true,
       handler(val) {
         if (val) {
-          const gameRoute = `/${this.room}/${this.player}`;
+          const gameRoute = `${this.room}[${this.player}]`;
           this.$router.push(gameRoute);
         }
       },
