@@ -25,8 +25,8 @@ export default function createWebSocketPlugin() {
     });
 
     socket.on('pause', () => {
-      console.log('left');
-      const ret = socket.emit('state', 'paused');
+      console.log('pause');
+      const ret = socket.emit('state', 'pause');
       console.log('ret', ret);
     });
 
