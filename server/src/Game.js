@@ -111,11 +111,11 @@ class Game {
 		this.start(io, room);
 	}
 
-	pause(chaussette, room_name) {
+	pause(io, room_name) {
 		this.on = false;
 		clearInterval(this.interval);
 		this.interval = null;
-		chaussette.to(room_name).emit("pause", true);
+		io.to(room_name).emit("pause", true);
 	}
 
 }
