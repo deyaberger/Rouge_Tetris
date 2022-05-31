@@ -48,7 +48,8 @@ export default defineComponent({
     // eslint-disable-next-line
     this.audio = new Audio(require('../assets/stronger-tetris.mp3'));
     this.audio.loop = true;
-    this.audio.volume = 0.3;
+    this.audio.volume = 0.2;
+    this.mute();
   },
   computed: {
     room() {

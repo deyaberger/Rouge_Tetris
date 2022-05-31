@@ -18,5 +18,11 @@ export default function createWebSocketPlugin() {
       const ret = socket.emit('state', 'a_player_left');
       console.log('ret', ret);
     });
+
+    socket.on('colors_change', () => {
+      console.log('colors_change');
+      const ret = socket.emit('state', 'colors_change');
+      console.log('ret', ret);
+    });
   };
 }

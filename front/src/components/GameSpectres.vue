@@ -45,18 +45,9 @@ export default {
     spectres() {
       return this.$store.getters['game/getSpectres'];
     },
-    colors() {
-      return this.$store.getters['game/getColors'];
-    },
   },
   methods: {
     getColor(value) {
-      if (!this.colors) {
-        return {
-          blocked: value !== 0,
-          empty: value === 0,
-        };
-      }
       return {
         blocked: value === -1,
         empty: value === 0,

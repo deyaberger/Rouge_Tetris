@@ -7,6 +7,10 @@
       <div class="row q-my-md">
         <span class="text-bold">Master : </span>{{ master }}
       </div>
+      <div  class="row q-my-md">
+        <span class="text-bold">Piece shadow :</span>
+        <q-toggle color="secondary" v-model="shadow"/>
+      </div>
       <div v-if="playerName === master" class="row q-my-md">
         <span class="text-bold">Spectres details :</span>
         <q-toggle color="secondary" v-model="details"/>
@@ -21,6 +25,7 @@ export default {
   data() {
     return {
       details: false,
+      shadow: true,
     };
   },
   computed: {
@@ -37,6 +42,9 @@ export default {
   watch: {
     details() {
       this.$socket.emit('colors', this.details);
+    },
+    shadow() {
+      this.$socket.emit('ghost', this.shadow);
     },
   },
 };
