@@ -16,12 +16,13 @@ function disconnect(room, socket) {
 	console.log("room");
 	console.log(room);
 	if (room != null) {
-		console.log("removing room")
+		console.log("removing player")
 		room.remove_player(socket); // Check if not better IO
 		if (room.master == null) {
+			console.log("removing room")
 			room_manager.remove_room(room.name)
 		}
-		console.log(room_manager.global_rooms_list)
+		// console.log(room_manager.global_rooms_list)
 	}
 }
 
@@ -46,7 +47,6 @@ io.on('connection', (socket) => {
 
 	socket.on('state_pong', (msg) => {
 		if (room != null && player != null) {
-			console.log("Stattte please");
 			socket.emit("game_state", room.get_state(socket.id));
 		}
 	})
@@ -59,27 +59,20 @@ io.on('connection', (socket) => {
 	})
 
 	socket.on('pause', (msg) => {
-		console.log("pause please");
 		if (room != null) {
 			if (msg == true) {
+				console.log("pause please");
 				room.game.pause(io, room.name);
 			}
 			else if (msg == false) {
+				console.log("continue please");
 				room.game.start(io, room);
 			}
 		}
 	})
 
-	// socket.on('continue', (msg) => { // ! We could make it just one msg with pause = false or true
-	// 	console.log("continue please");
-	// 	if (room != null) {
-	// 		room.game.start(io, room);
-	// 	}
-	// })
-
 	
 	socket.on('move', (msg) => {
-		// console.log("Move  please");
 		if (room != null && player != null && room.game.on == true) {
 			player.tetris.apply_move(msg);
 			socket.emit("game_state", room.get_state(socket.id));
@@ -91,7 +84,7 @@ io.on('connection', (socket) => {
 		console.log("colors please");
 		if (room != null) {
 			room.colors = msg;
-			socket.to(room.name).emit("state_ping"); //! Change event name!! Or make it individual
+			socket.to(room.name).emit("state_ping");
 		}
 	})
 
@@ -99,7 +92,7 @@ io.on('connection', (socket) => {
 		console.log("ghost please");
 		if (room != null && player != null && room.game.on == true) {
 			player.tetris.show_ghost = msg;
-			socket.emit("game_state", room.get_state(socket.id)); // ! Change if you want to make it general for all players
+			socket.emit("game_state", room.get_state(socket.id));
 		}
 
 	})
@@ -118,7 +111,7 @@ io.on('connection', (socket) => {
 		}
 	})
 
-	socket.on('quit', () => { // ! IS there a difference with disconnect?
+	socket.on('quit', () => { 
 		console.log("Quit  please");
 		if (room != null) {
 			disconnect(room, socket);
