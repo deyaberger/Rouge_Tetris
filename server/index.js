@@ -61,16 +61,21 @@ io.on('connection', (socket) => {
 	socket.on('pause', (msg) => {
 		console.log("pause please");
 		if (room != null) {
-			room.game.pause(io, room.name);
+			if (msg == true) {
+				room.game.pause(io, room.name);
+			}
+			else if (msg == false) {
+				room.game.start(io, room);
+			}
 		}
 	})
 
-	socket.on('continue', (msg) => { // ! We could make it just one msg with pause = false or true
-		console.log("continue please");
-		if (room != null) {
-			room.game.start(io, room);
-		}
-	})
+	// socket.on('continue', (msg) => { // ! We could make it just one msg with pause = false or true
+	// 	console.log("continue please");
+	// 	if (room != null) {
+	// 		room.game.start(io, room);
+	// 	}
+	// })
 
 	
 	socket.on('move', (msg) => {
