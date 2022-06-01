@@ -133,6 +133,23 @@ class RoomManager {
 		return false;
 	}
 
+	get_rooms_info() {
+		let infos = {}
+		for (const room_name in this.global_rooms_list) {
+			if (this.global_rooms_list.hasOwnProperty(room_name)) {
+				const room = this.global_rooms_list[room_name]
+				const size = Object.keys(room.players_list).length; 
+				infos[room_name] = {
+					"game_on" : room.game.on,
+					"master" : room.master,
+					"players_number" : size
+					
+				}
+			}
+		}
+		return infos
+	}
+
 
 	connect_room_player(room, player, chaussette) {
 		if (room.master == null) {
@@ -150,8 +167,6 @@ class RoomManager {
 
 
 	handle_socket_msg(msg, chaussette) {
-		console.log(msg);
-		console.log(chaussette.id);
 		if ((msg.room_name == undefined || msg.player_name == undefined) && chaussette != null)
 		{
 			chaussette.emit("format_error", "wrong format for join_room msg");
