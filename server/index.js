@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const bodyParser = require("body-parser");
+const cors = require("cors");
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
@@ -145,6 +147,17 @@ io.on('connection', (socket) => {
 			disconnect(room, socket);
 		}
 	  });
+});
+
+app.use(express.static("dist"));
+var corsOptions = {
+  origin: "http://localhost:8080"
+};
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.get('/', function (req,res) {
+  res.sendFile("dist/index.html");
 });
 
 server.listen(3000, () => {
