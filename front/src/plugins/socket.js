@@ -24,7 +24,7 @@ export default function createWebSocketPlugin() {
       store.dispatch('error/player', event);
     });
 
-    socket.on('player_room_error', (event) => {
+    socket.on('room_error', (event) => {
       socket.emit('room_info');
       console.log('player_room_error', event);
       store.dispatch('error/room', event);
