@@ -169,7 +169,6 @@ class RoomManager {
 	handle_socket_msg(msg, chaussette) {
 		if ((msg.room_name == undefined || msg.player_name == undefined) && chaussette != null)
 		{
-			chaussette.emit("format_error", "wrong format for join_room msg");
 			return false;
 		}
 		this.set_difficulty(msg);
