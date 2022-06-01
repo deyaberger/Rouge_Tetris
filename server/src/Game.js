@@ -11,7 +11,6 @@ class Game {
 		this.winner = null;
 		this.seed = Math.random();
 		this.players_list = players_list;
-		this.winner_pause = false;
 		this.interval = null;
 		this.difficulty = difficulty;
 	}
@@ -31,13 +30,12 @@ class Game {
 
 	check_winner(io, room, active_player_id, active_player_nb) {
 		if (active_player_id != null && active_player_nb == 1) {
-			if (Object.keys(this.players_list).length > 1 && this.winner_pause == false) {
+			if (Object.keys(this.players_list).length > 1) {
 				// this.pause(io, room.name);
-				// this.winner_pause = true;
-				this.stop(io, room);
-				// if (io != null) {/
-					// io.to(active_player_id).emit("winner", room.get_state(active_player_id)); // ! TO BE HANDLED ON CLIENT SIDE !!
-				// }
+				this.winner = this.players_list[active_player_id].name;
+				if (io != null) {
+					this.stop(io, room)
+				}
 			}
 			this.winner = this.players_list[active_player_id].name;
 		}
@@ -62,7 +60,7 @@ class Game {
 					tetris.clean();
 					if (tetris.apply_move("time") == false) {
 						this.players_list[player_id].lost = true;
-						// io.to(player_id).emit("loser", room.get_state(player_id)); // ! TO BE HANDLED ON CLIENT SIDE !!
+						io.to(player_id).emit("game_state", room.get_state(player_id));
 					}
 					if (tetris.rows_to_delete.length != 0) {
 						this.block_other_players_rows(player_id, tetris.rows_to_delete.length);
@@ -96,7 +94,7 @@ class Game {
 		for (const player_id in this.players_list) {
 			if (Object.hasOwnProperty.call(this.players_list, player_id)) {
 				if (io != null) {
-					io.to(room.name).emit("game_state", room.get_state(player_id));
+					io.to(room.name).emit("state_ping");
 				}
 			}
 		}
@@ -115,7 +113,6 @@ class Game {
 	}
 
 	pause(io, room_name) {
-		// this.on = false;
 		this.paused = true;
 		clearInterval(this.interval);
 		this.interval = null;
