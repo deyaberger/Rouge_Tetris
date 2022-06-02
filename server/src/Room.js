@@ -176,17 +176,13 @@ class RoomManager {
 		{
 			var suggested_name = this.find_random_name(msg.player_name);
 			chaussette.emit("player_name_error", suggested_name);
-			console.log("RETURNING FALSE BECAUSE OF PLAYER NAME")
 			return false;
 		}
 		const room = this.find_or_create_room(msg.room_name);
 		if (!this.is_room_available(room) && chaussette != null) 
 		{
 			var suggested_name = this.find_random_name_room(msg.room_name);
-			console.log("suggested name")
-			console.log(suggested_name)
 			chaussette.emit("room_error", suggested_name);
-			console.log("RETURNING FALSE BECAUSE OF ROOM NAME")
 			return false;
 		}
 		const player = new Player(msg.player_name, room.game.seed);

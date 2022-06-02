@@ -40,7 +40,6 @@ class Game {
 			this.winner = this.players_list[active_player_id].name;
 		}
 		if (active_player_nb == 0) {
-			console.log("END OF GAME for real");
 			this.stop(io, room);
 		}
 	}
@@ -49,7 +48,6 @@ class Game {
 	update_players_state (io, room) {
 		let active_player_nb = 0;
 		let active_player_id = null;
-		console.log("***********")
 		for (const player_id in this.players_list) {
 			if (Object.hasOwnProperty.call(this.players_list, player_id)) {
 				const player = this.players_list[player_id];

@@ -70,7 +70,6 @@ class Tetris {
 
 	does_it_fit(piece, piece_position) {
 		if (piece == null || piece_position == null) {
-			console.log("missing pieces");
 			return false;
 		}
 		for (let i = 0; i < piece.size[0]; i++) {
@@ -221,13 +220,10 @@ class Tetris {
 
 	generate_new_piece() {
 		let piece_nb = (Math.round(this.generator() * 10) % 6) + 1;
-		// let piece_nb = 4;
-		if (piece_nb < 1 || piece_nb > 7) {console.log(`--------------------------ERROR: piece_nb = ${piece_nb}`)};
 		let rotation_nb = 0;
 		let piece = new Piece(piece_nb, rotation_nb);
 		let piece_position = [-1, 3]; 
 		if (!this.does_it_fit(piece, piece_position)){
-			console.log("Can't fit new piece: --> END OF GAME");
 			return false;
 		}
 		this.active_piece = piece;
@@ -238,14 +234,12 @@ class Tetris {
 
 	apply_move(move) {
 		if (this.active_piece == null) {
-			console.log("* Should Only Print Once * Generating first piece")
 			if (this.generate_new_piece() == false) {
 				return false;
 			}
 			return true;
 		}
 		else {
-			// console.log(`applying move ${move}`);
 			let new_position = this.piece_position;
 			let new_piece = new Piece(this.active_piece.piece_nb, this.active_piece.rotation_nb);
 			if (move == "down" || move == "time") {
