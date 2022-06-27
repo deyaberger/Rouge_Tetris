@@ -15,7 +15,7 @@ const io = new Server(server, {
 const room_manager = new RoomManager();
 
 function disconnect(room, socket) {
-	if (room != null) {
+	if (room != null && room != false) {
 		socket.leave(room.name);
 		room.remove_player(socket);
 		if (room.master == null) {
