@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
+    "@cypress/code-coverage": "^3.10.0",
     "@quasar/app-webpack": "^3.0.0",
     "cypress": "^9.7.0",
     "eslint": "^8.10.0",

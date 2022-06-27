@@ -13,20 +13,16 @@ export default function createWebSocketPlugin() {
     });
 
     socket.on('state_ping', () => {
-      console.log('ping');
-      const ret = socket.emit('state_pong', 'pong');
-      console.log('ret', ret);
+      socket.emit('state_pong', 'pong');
     });
 
     socket.on('player_name_error', (event) => {
       socket.emit('room_info');
-      console.log('player_name_error', event);
       store.dispatch('error/player', event);
     });
 
     socket.on('room_error', (event) => {
       socket.emit('room_info');
-      console.log('player_room_error', event);
       store.dispatch('error/room', event);
     });
   };
