@@ -79,7 +79,7 @@ describe('Game', function () {
 		it ('should pause game', function() {
 			room.game.pause();
 			assert.equal(room.game.interval, null);
-			assert.equal(room.game.on, false);
+			assert.equal(room.game.paused, true);
 		});
 		it ('should start again', function() {
 			room.game.start(null, null);
@@ -107,7 +107,7 @@ describe('Game', function () {
 		it ('should pause game', function() {
 			room.game.pause();
 			assert.equal(room.game.interval, null);
-			assert.equal(room.game.on, false);
+			assert.equal(room.game.paused, true);
 		});
 
 	});

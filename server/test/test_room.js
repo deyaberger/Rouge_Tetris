@@ -95,10 +95,11 @@ describe('Room', function () {
 		});
 		it ('should handle socket msg', function() {
 			msg = {
+				"difficulty" : 1,
 				"room_name" : room_C_name,
 				"player_name" : player_3_name
 			}
-			room_C = new Room(room_C_name);
+			room_C = new Room(room_C_name, 1);
 			room_C.game.seed = fake_seed
 			room_C.master = player_3_name;
 			var test = room_manager.handle_socket_msg(msg);

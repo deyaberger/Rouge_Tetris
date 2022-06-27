@@ -114,7 +114,9 @@ class Game {
 		this.paused = true;
 		clearInterval(this.interval);
 		this.interval = null;
-		io.to(room_name).emit("state_ping");
+		if (io != null) {
+			io.to(room_name).emit("state_ping");
+		}
 	}
 
 }
