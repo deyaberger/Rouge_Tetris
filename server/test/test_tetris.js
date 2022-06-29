@@ -25,7 +25,8 @@ const { empty_background,
 	almost_the_end_with_six,
 	end_with_six,
 	almost_full_with_fours_spectrum,
-	after_delete_spectrum
+	after_delete_spectrum,
+	ghost_test
 	} = require("./test_utils");
 
 describe('Tetris', function () {
@@ -44,6 +45,7 @@ describe('Tetris', function () {
 
 	describe('incorporate_pieces', function () {
 		it ('should fit orange piece (nb 3)', function() {
+			tetris.show_ghost = false
 			tetris.active_piece = new Piece (3, 0);
 			tetris.piece_position = [-1, 3];
 			assert(tetris.does_it_fit(tetris.active_piece, tetris.piece_position));
@@ -174,6 +176,17 @@ describe('Tetris', function () {
 			tetris.apply_move("time");
 			tetris.update_spectre();
 			assert.equal(JSON.stringify(tetris.spectre), JSON.stringify(after_delete_spectrum));
+		});
+	});
+
+	describe('ghost', function () {
+		it ('Should stop at the first colision', function() {
+			tetris.background = copy_array(ghost_test, max_row, max_col);
+			tetris.active_piece = new Piece(2, 3);
+			tetris.piece_position = [5,3];
+			tetris.update_spectre();
+			tetris.get_ghost(tetris.active_piece, tetris.piece_position)
+			assert.equal(JSON.stringify(tetris.ghost_position), JSON.stringify([15,3]));
 		});
 	});
 });

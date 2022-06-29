@@ -7,16 +7,23 @@ export default function createWebSocketPlugin() {
       store.dispatch('game/processGameState', ret);
     });
 
-    socket.on('new_player', () => {
-      console.log('joined');
-      const ret = socket.emit('state', 'new_player');
-      console.log('ret', ret);
+    socket.on('room_state', (ret) => {
+      console.log('room_state', ret);
+      store.dispatch('game/setRoomState', ret);
     });
 
-    socket.on('a_player_left', () => {
-      console.log('left');
-      const ret = socket.emit('state', 'a_player_left');
-      console.log('ret', ret);
+    socket.on('state_ping', () => {
+      socket.emit('state_pong', 'pong');
+    });
+
+    socket.on('player_name_error', (event) => {
+      socket.emit('room_info');
+      store.dispatch('error/player', event);
+    });
+
+    socket.on('room_error', (event) => {
+      socket.emit('room_info');
+      store.dispatch('error/room', event);
     });
   };
 }

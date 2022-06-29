@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const bodyParser = require("body-parser");
+const cors = require("cors");
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
@@ -13,15 +15,12 @@ const io = new Server(server, {
 const room_manager = new RoomManager();
 
 function disconnect(room, socket) {
-	console.log("room");
-	console.log(room);
-	if (room != null) {
-		console.log("removing room")
-		room.remove_player(socket); // Check if not better IO
+	if (room != null && room != false) {
+		socket.leave(room.name);
+		room.remove_player(socket);
 		if (room.master == null) {
 			room_manager.remove_room(room.name)
 		}
-		console.log(room_manager.global_rooms_list)
 	}
 }
 
@@ -34,96 +33,118 @@ function disconnect(room, socket) {
 // });
 
 io.on('connection', (socket) => {
-	console.log('a user connected');
-	socket.emit("room_state", room_manager.get_state());
+	// console.log('\na user connected: ' + socket.id);
+
+	socket.on("room_info", () => {
+		socket.emit("room_state", room_manager.get_rooms_info());
+	});
 
 	var room = null;
 	var player = null;
 	socket.on('join_room', (msg) => {
-		console.log("Joining Room");
+		// console.log("\nJoining Room: " + socket.id + "\n");
 		room = room_manager.handle_socket_msg(msg, socket);
-		if (room != null) {
+		if (room != null && room != false) {
 			player = room.players_list[socket.id];
-			console.log(room_manager.global_rooms_list)
 		}
 	});
 
-	socket.on('start', (msg) => {
-		console.log("starting");
-		if (room != null && room.master == player.name) {
-			room.game.on = true;
-		room.game.start(io, room); }
-	})
-
-	socket.on('state', (msg) => {
-		console.log("Stattte please");
-		if (room != null) {
+	socket.on('state_pong', (msg) => {
+		if (room != null && player != null && room != undefined && player != undefined) {
+			// console.log("\nState Pong: " + socket.id)
 			socket.emit("game_state", room.get_state(socket.id));
 		}
 	})
 
-	socket.on('pause', (msg) => {
-		console.log("pause please");
-		if (room != null && msg == true) {
-			room.game.pause();
-		}
-	})
-
-	socket.on('continue', (msg) => {
-		console.log("continue please");
-		if (room != null && msg == true) {
+	socket.on('start', (msg) => {
+		if (room != null && room.master == player.name) {
+			// console.log("\nStarting game: " + socket.id)
+			room.game.on = true;
 			room.game.start(io, room);
 		}
 	})
 
-	socket.on('colors', (msg) => {
-		console.log("colors please");
+	socket.on('pause', (msg) => {
 		if (room != null) {
-			room.colors = msg;
-			socket.to(room.name).emit("a_player_left", true); //! Change event name!!
+			if (msg == true) {
+				// console.log("\npause please: " + socket.id);
+				room.game.pause(io, room.name);
+			}
+			else if (msg == false) {
+				// console.log("\ncontinue please: " + socket.id);
+				room.game.start(io, room);
+			}
 		}
 	})
 
+	
 	socket.on('move', (msg) => {
-		// console.log("Move  please");
 		if (room != null && player != null && room.game.on == true) {
+			// console.log("\nmove: " + socket.id);
 			player.tetris.apply_move(msg);
 			socket.emit("game_state", room.get_state(socket.id));
 		}
 
 	})
 
+	socket.on('colors', (msg) => {
+		if (room != null) {
+			// console.log("\ncolors: " + socket.id);
+			room.colors = msg;
+			socket.to(room.name).emit("state_ping");
+		}
+	})
+
+	socket.on('ghost', (msg) => {
+		if (room != null && player != null && room.game.on == true) {
+			// console.log("\nghost: " + socket.id);
+			player.tetris.show_ghost = msg;
+			socket.emit("game_state", room.get_state(socket.id));
+		}
+
+	})
+
 	socket.on('stop', (msg) => {
-		console.log("Stop  please");
+		// console.log("\nStop  please: " + socket.id);
 		if (room != null && room.game.on == true) {
 			room.game.stop(io, room);
 		}
 	})
 
 	socket.on('restart', (msg) => {
-		console.log("Restart  please");
 		if (room != null && room.game.on == false) {
+			// console.log("\nRestart: " + socket.id);
 			room.game.restart(io, room);
 		}
 	})
 
-	socket.on('quit', () => {
-		console.log("Quit  please");
+	socket.on('quit', () => { 
 		if (room != null) {
-			console.log("Quitting");
-			console.log("room before");
-			console.log(room);
+			// console.log("\nQuit: " + socket.id);
 			disconnect(room, socket);
 		}
 	});
 
 	socket.on("disconnect", (reason) => {
-		console.log("A client just left");
-		disconnect(room, socket);
+		if (room != null) {
+			// console.log("\ndisconnect: " + socket.id);
+			disconnect(room, socket);
+		}
 	  });
 });
 
+app.use(express.static("dist"));
+var corsOptions = {
+  origin: "http://localhost:8080"
+};
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.get('/', function (req,res) {
+  res.sendFile("dist/index.html");
+});
+
 server.listen(3000, () => {
-  console.log('listening on *:3000');
+//   console.log('\nlistening on *:3000');
 });
 

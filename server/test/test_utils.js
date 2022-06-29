@@ -99,6 +99,7 @@ almost_the_end[17] = [0, 0, 0, 1, 1, 1, 1, 0, 0, 0];
 almost_the_end[18] = [0, 0, 0, 0, 6, 0, 0, 0, 0, 0];
 almost_the_end[19] = [0, 0, 0, 6, 6, 6, 0, 0, 0, 0];
 
+
 let almost_the_end_with_six = copy_array(almost_the_end, max_row, max_col);
 almost_the_end_with_six[0] =  [0, 0, 0, 6, 6, 6, 0, 0, 0, 0];
 almost_the_end_with_six[1] =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -106,6 +107,31 @@ almost_the_end_with_six[1] =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 let end_with_six = copy_array(almost_the_end, max_row, max_col);
 end_with_six[0] =  [0, 0, 0, 0, 6, 0, 0, 0, 0, 0];
 end_with_six[1] =  [0, 0, 0, 6, 6, 6, 0, 0, 0, 0];
+
+
+let ghost_test = create_2d_array(max_row, max_col);
+ghost_test[0] =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[1] =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[2] =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[3] =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[4] =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[5] =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[6] =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[7] =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[8] =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[9] =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[11] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[12] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[14] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[15] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[16] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[17] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ghost_test[18] = [0, 0, 4, 4, 0, 0, 0, 0, 0, 0];
+ghost_test[19] = [1, 1, 1, 0, 0, 0, 1, 0, 0, 1];
+
+
 
 let green0 = [   
 	[0, 5, 5],
@@ -152,5 +178,6 @@ module.exports = {
 	after_delete_oponent,
 	after_2nd_delete_oponent,
 	almost_full2,
-	almost_full2_after
+	almost_full2_after,
+	ghost_test
 }

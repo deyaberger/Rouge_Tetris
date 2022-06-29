@@ -13,6 +13,8 @@
 </template>
 
 <style lang="sass" scoped>
+.shadow
+  background-color: $shadow
 .blocked
   background-color: $blocked
 .empty
@@ -45,19 +47,11 @@ export default {
     spectres() {
       return this.$store.getters['game/getSpectres'];
     },
-    colors() {
-      return this.$store.getters['game/getColors'];
-    },
   },
   methods: {
     getColor(value) {
-      if (!this.colors) {
-        return {
-          blocked: value !== 0,
-          empty: value === 0,
-        };
-      }
       return {
+        shadow: value === -2,
         blocked: value === -1,
         empty: value === 0,
         turquoise: value === 1,

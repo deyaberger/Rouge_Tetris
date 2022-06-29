@@ -8,21 +8,39 @@
         <q-toolbar-title>
           <span class="text-secondary text-bold">{{ room }}</span>
         </q-toolbar-title>
-        <q-btn
-          v-if="isMuted"
-          flat
-          :icon="'volume_off'"
-          @click="mute"/>
-        <q-btn
-          v-else
-          flat
-          :icon="'volume_up'"
-          @click="mute"/>
-        <q-btn
-          v-show="isInGame"
-          flat
-          label="Quit Room"
-          @click="quitRoom"/>
+        <template v-if="isInGame">
+          <template v-if="master === player">
+            <q-btn
+              v-if="!gamePaused"
+              flat
+              :icon="'pause'"
+              @click="playGame"/>
+            <q-btn
+              v-else
+              flat
+              :icon="'play_arrow'"
+              @click="pauseGame"/>
+          </template>
+          <template v-else>
+            <div v-if="gamePaused">
+             Game paused
+            </div>
+          </template>
+          <q-btn
+            v-if="isMuted"
+            flat
+            :icon="'volume_off'"
+            @click="mute"/>
+          <q-btn
+            v-else
+            flat
+            :icon="'volume_up'"
+            @click="mute"/>
+          <q-btn
+            flat
+            label="Quit Room"
+            @click="quitRoom"/>
+        </template>
       </q-toolbar>
     </q-header>
 
@@ -48,24 +66,37 @@ export default defineComponent({
     // eslint-disable-next-line
     this.audio = new Audio(require('../assets/stronger-tetris.mp3'));
     this.audio.loop = true;
-    this.audio.volume = 0.3;
+    this.audio.volume = 0.1;
+    this.mute();
   },
   computed: {
     room() {
       return this.$store.getters['game/getRoomName'];
     },
-    payer() {
+    player() {
       return this.$store.getters['game/getPlayerName'];
+    },
+    master() {
+      return this.$store.getters['game/getMaster'];
     },
     gameOn() {
       return this.$store.getters['game/getGameOn'];
     },
+    gamePaused() {
+      return this.$store.getters['game/getGamePaused'];
+    },
     isInGame() {
-      return (this.room.length > 0 && this.player.length > 0);
+      return this.room && this.player;
     },
   },
   methods: {
-    play() {
+    playGame() {
+      this.$socket.emit('pause', true);
+    },
+    pauseGame() {
+      this.$socket.emit('pause', false);
+    },
+    playMusic() {
       this.audio.play();
       this.isPlaying = true;
     },
@@ -84,14 +115,15 @@ export default defineComponent({
       this.isPlaying = false;
     },
     quitRoom() {
-      this.$store.dispatch('game/quit');
       this.$socket.emit('quit');
+      this.$store.dispatch('error/clear');
+      this.$store.dispatch('game/quit');
     },
   },
   watch: {
     gameOn(val) {
       if (val) {
-        this.play();
+        this.playMusic();
       } else {
         this.stop();
       }

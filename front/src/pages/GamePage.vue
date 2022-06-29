@@ -66,6 +66,9 @@ export default defineComponent({
     gameOn() {
       return this.$store.getters['game/getGameOn'];
     },
+    gamePaused() {
+      return this.$store.getters['game/getGamePaused'];
+    },
     room() {
       return this.$store.getters['game/getRoomName'];
     },
@@ -97,27 +100,27 @@ export default defineComponent({
       }
     },
     handleSpace() {
-      if (this.gameOn) {
-        this.$socket.emit('join_room', 'space');
+      if (this.gameOn && !this.gamePaused) {
+        this.$socket.emit('move', 'space');
       }
     },
     handleDown() {
-      if (this.gameOn) {
+      if (this.gameOn && !this.gamePaused) {
         this.$socket.emit('move', 'down');
       }
     },
     handleUp() {
-      if (this.gameOn) {
+      if (this.gameOn && !this.gamePaused) {
         this.$socket.emit('move', 'rotate');
       }
     },
     handleLeft() {
-      if (this.gameOn) {
+      if (this.gameOn && !this.gamePaused) {
         this.$socket.emit('move', 'left');
       }
     },
     handleRight() {
-      if (this.gameOn) {
+      if (this.gameOn && !this.gamePaused) {
         this.$socket.emit('move', 'right');
       }
     },

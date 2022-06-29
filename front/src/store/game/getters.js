@@ -1,5 +1,13 @@
+export function getRoomState(state) {
+  return state.roomState;
+}
+
 export function getGameOn(state) {
   return state.gameOn;
+}
+
+export function getGamePaused(state) {
+  return state.gamePaused;
 }
 
 export function getRoomName(state) {

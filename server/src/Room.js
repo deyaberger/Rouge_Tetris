@@ -1,9 +1,14 @@
 const { Player } = require("./Player.js");
 const { Game } = require("./Game.js");
+const { randomBytes } = require("crypto");
 
+const EASY = 1
+const MEIDUM = 2
+const HARD = 3
 
 class Room {
 	constructor(name, difficulty) {
+		this.difficulty = difficulty
 		this.name = name;
 		this.master = null;
 		this.players_list = {};
@@ -35,6 +40,7 @@ class Room {
 		const player = this.players_list[ID];
 		const state = {
 			"game_on" : this.game.on,
+			"game_pause" : this.game.paused,
 			"room_name" : this.name,
 			"player_name" : player.name,
 			"player_has_lost" : player.lost,
@@ -52,7 +58,7 @@ class Room {
 
 	remove_player(socket) {
 		let master_is_leaving = false;
-		if (this.master == this.players_list[socket.id].name) {
+		if (this.players_list[socket.id] != undefined && this.master == this.players_list[socket.id].name) {
 			master_is_leaving = true;
 		}
 		delete (this.players_list[socket.id]);
@@ -63,7 +69,9 @@ class Room {
 				this.master = this.players_list[next_key].name;
 			}
 		}
-		socket.to(this.name).emit("a_player_left", true); 
+		if (this.master != null) {
+			socket.to(this.name).emit("state_ping");
+		}
 	}
 
 }
@@ -82,7 +90,7 @@ class RoomManager {
 	find_or_create_room(room_name, difficulty) {
 		let room = this.global_rooms_list[room_name];
 		if (room == undefined) {
-			room = new Room(room_name, difficulty);
+			room = new Room(room_name, this.difficulty);
 		}
 		return room;
 	}
@@ -100,12 +108,47 @@ class RoomManager {
 		return false;
 	}
 
+	find_random_name(base_name) {
+		let suggested_name = base_name + Math.round(Math.random() * 100).toString()
+		while (this.player_already_exists(suggested_name) === true) {
+			suggested_name = base_name + Math.round(Math.random() * 100).toString()
+		}
+		return (suggested_name)
+	}
+
+	find_random_name_room(room_name) {
+		let suggested_name = room_name + Math.round(Math.random() * 100).toString()
+		let room = this.global_rooms_list[suggested_name];
+		while (room !== undefined) {
+			suggested_name = room.name + Math.round(Math.random() * 100).toString()
+			room = this.global_rooms_list[suggested_name];
+		}
+		return (suggested_name)
+	}
+
 	is_room_available(room)
 	{
 		if (room.game.on == false) {
 			return true;
 		}
 		return false;
+	}
+
+	get_rooms_info() {
+		let infos = {}
+		for (const room_name in this.global_rooms_list) {
+			if (this.global_rooms_list.hasOwnProperty(room_name)) {
+				const room = this.global_rooms_list[room_name]
+				const size = Object.keys(room.players_list).length; 
+				infos[room_name] = {
+					"game_on" : room.game.on,
+					"master" : room.master,
+					"players_number" : size
+					
+				}
+			}
+		}
+		return infos
 	}
 
 
@@ -119,22 +162,28 @@ class RoomManager {
 		this.global_rooms_list[room.name] = room;
 	}
 
+	set_difficulty(msg) {
+		this.difficulty = msg.difficulty == undefined ? EASY : msg.difficulty
+	}
+
 
 	handle_socket_msg(msg, chaussette) {
 		if ((msg.room_name == undefined || msg.player_name == undefined) && chaussette != null)
 		{
-			chaussette.emit("error", "wrong format for join_room msg");
 			return false;
 		}
+		this.set_difficulty(msg);
 		if (this.player_already_exists(msg.player_name) && chaussette != null)
 		{
-			chaussette.emit("error", "sorry, this player's name is already taken");
+			var suggested_name = this.find_random_name(msg.player_name);
+			chaussette.emit("player_name_error", suggested_name);
 			return false;
 		}
 		const room = this.find_or_create_room(msg.room_name, msg.difficulty);
 		if (!this.is_room_available(room) && chaussette != null) 
 		{
-			chaussette.emit("error", "sorry, this room is not available");
+			var suggested_name = this.find_random_name_room(msg.room_name);
+			chaussette.emit("room_error", suggested_name);
 			return false;
 		}
 		const player = new Player(msg.player_name, room.game.seed);
@@ -142,7 +191,7 @@ class RoomManager {
 		if (chaussette != null) {
 			chaussette.join(room.name);
 			chaussette.emit("game_state", room.get_state(chaussette.id))
-			chaussette.to(room.name).emit("new_player", true);
+			chaussette.to(room.name).emit("state_ping");
 		}
 		return room;
 	}

@@ -9,6 +9,8 @@
 </template>
 
 <style lang="sass" scoped>
+.shadow
+  background-color: $shadow
 .blocked
   background-color: $blocked
 .empty
@@ -46,6 +48,7 @@ export default {
   methods: {
     getColor(value) {
       return {
+        shadow: value === -2,
         blocked: value === -1,
         empty: value === 0,
         turquoise: value === 1,

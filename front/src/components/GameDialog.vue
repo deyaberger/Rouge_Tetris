@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="gameNotOn" persistent>
+  <q-dialog v-model="show" persistent>
       <q-card>
         <q-card-section class="row items-center">
           <template v-if="winner">
@@ -30,8 +30,11 @@ export default {
     isMaster: Boolean,
   },
   computed: {
-    gameNotOn() {
-      return !this.$store.getters['game/getGameOn'];
+    gameOn() {
+      return this.$store.getters['game/getGameOn'];
+    },
+    show() {
+      return !this.gameOn;
     },
     winner() {
       return this.$store.getters['game/getWinner'];
@@ -43,6 +46,7 @@ export default {
   methods: {
     quit() {
       this.$store.dispatch('game/quit');
+      this.$store.dispatch('error/clear');
       this.$socket.emit('quit');
     },
   },

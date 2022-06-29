@@ -4,7 +4,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/MenuPage.vue') },
-      { path: '/:room/:player', component: () => import('src/pages/GamePage.vue') },
+      { path: ':room[:player]', component: () => import('src/pages/GamePage.vue') },
       { path: '/error', component: () => import('src/pages/ErrorServer.vue') },
 
     ],
