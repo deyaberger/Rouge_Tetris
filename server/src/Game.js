@@ -31,11 +31,8 @@ class Game {
 
 	check_winner(io, room, active_player_id, active_player_nb) {
 		if (active_player_id != null && active_player_nb == 1) {
-			console.log("checking for winner")
-			console.log(this.number_of_players)
 			if (this.number_of_players > 1) {
 				this.winner = this.players_list[active_player_id].name;
-				console.log("WE HAVE A WINNER")
 				if (io != null) {
 					this.stop(io, room)
 				}

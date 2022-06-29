@@ -86,7 +86,9 @@ io.on('connection', (socket) => {
 	socket.on('move', (msg) => {
 		if (room != null && player != null && room.game.on == true) {
 			// console.log("\nmove: " + socket.id);
-			player.tetris.apply_move(msg);
+			if (player.tetris.apply_move(msg) == false && msg == "space") {
+				player.tetris.apply_move("time")
+			};
 			socket.emit("game_state", room.get_state(socket.id));
 		}
 

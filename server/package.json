@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "nyc --reporter=text mocha --exit",
+    "coverage": "nyc --reporter=text mocha --exit",
     "start": "nodemon ./index.js"
   },
   "author": "",

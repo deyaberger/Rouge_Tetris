@@ -262,7 +262,13 @@ class Tetris {
 			{
 				this.active_piece = new_piece;
 				this.piece_position = new_position;
-				// this.check_full_rows();
+				if (move == "space") {
+					this.add_to_backgound();
+					this.update_spectre();
+					if (this.generate_new_piece() == false) {
+						return false;
+					}
+				}
 				return true;
 			}		
 			else if (result == false && move == "time") {

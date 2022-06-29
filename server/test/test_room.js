@@ -9,6 +9,7 @@ const {
 
 const room_manager = new RoomManager();
 
+
 var room_A = null;
 var room_B = null;
 var room_C = null;
@@ -74,6 +75,25 @@ describe('Room', function () {
 			}
 			room_B = room_manager.find_or_create_room(msg.room_name);
 			assert.notEqual(room_B, room_A);
+		});
+		it ('should create random name', function() {
+			let name = "heyhey"
+			let random = room_manager.find_random_name(name)
+			assert.notEqual(name, random)
+		});
+		it ('should create random room name', function() {
+			let infos = { room_A: { game_on: false, master: 'player_1', players_number: 1 } }
+			assert.equal(JSON.stringify(room_manager.get_rooms_info()), JSON.stringify(infos))
+		});
+		it ('should create random room name', function() {
+			console.log("ROOM INFOS:")
+console.log(room_manager.get_rooms_info())
+			let name = "heyhey"
+			let random = room_manager.find_random_name_room(name)
+			assert.notEqual(name, random)
+		});
+		it ('should remove player', function() {
+			assert.equal(room_B.remove_player(), false)
 		});
 		it ('should connect player to room', function() {
 			player_2 = new Player(msg.player_name, fake_seed);

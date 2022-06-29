@@ -58,6 +58,9 @@ class Room {
 
 	remove_player(socket) {
 		let master_is_leaving = false;
+		if (socket == null) {
+			return false;
+		}
 		if (this.players_list[socket.id] != undefined && this.master == this.players_list[socket.id].name) {
 			master_is_leaving = true;
 		}
