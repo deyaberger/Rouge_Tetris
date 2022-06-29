@@ -25,6 +25,13 @@ function disconnect(room, socket) {
 	}
 }
 
+// io.use((socket, next) => {
+//   if (isValid(socket.request)) {
+//     next();
+//   } else {
+//     next(new Error("invalid"));
+//   }
+// });
 
 io.on('connection', (socket) => {
 	console.log('a user connected');

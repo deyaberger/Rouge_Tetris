@@ -3,13 +3,26 @@ const { Tetris } = require("./Tetris")
 
 
 class Game {
-	constructor(players_list) {
+	constructor(players_list, difficulty) {
 		this.on = false;
 		this.winner = null;
 		this.seed = Math.random();
 		this.players_list = players_list;
 		this.winner_pause = false;
 		this.interval = null;
+		this.difficulty = "medium"
+		if (difficulty != null) {
+			this.difficulty = difficulty;
+		}
+		if (this.difficulty == "easy") {
+			this.steps = 1500;
+		}
+		else if (this.difficulty == "medium") {
+			this.steps = 1500;
+		}
+		else if (this.difficulty == "hard") {
+			this.steps = 500;
+		}
 		// this.show_ghost = false;
 	}
 
@@ -91,7 +104,7 @@ class Game {
 
 	start(io, room) {
 		this.on = true;
-		this.interval = setInterval(() => this.update_players_state(io, room), 1000);
+		this.interval = setInterval(() => this.update_players_state(io, room), this.steps);
 	}
 
 	stop(io, room) {

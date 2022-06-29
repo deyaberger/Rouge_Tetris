@@ -3,11 +3,11 @@ const { Game } = require("./Game.js");
 
 
 class Room {
-	constructor(name) {
+	constructor(name, difficulty) {
 		this.name = name;
 		this.master = null;
 		this.players_list = {};
-		this.game = new Game(this.players_list);
+		this.game = new Game(this.players_list, difficulty);
 		this.colors = false;
 	}
 
@@ -43,7 +43,8 @@ class Room {
 			"master" : this.master,
 			"winner" : this.game.winner,
 			"tetris" : player.tetris.get_state(),
-			"spectres" : this.get_other_player_spectres(ID)
+			"spectres" : this.get_other_player_spectres(ID),
+			"difficulty" : this.game.difficulty,
 		}
 		return state;
 	}
@@ -78,10 +79,10 @@ class RoomManager {
 		return (this.global_rooms_list);
 	}
 	
-	find_or_create_room(room_name) {
+	find_or_create_room(room_name, difficulty) {
 		let room = this.global_rooms_list[room_name];
 		if (room == undefined) {
-			room = new Room(room_name);
+			room = new Room(room_name, difficulty);
 		}
 		return room;
 	}
@@ -130,7 +131,7 @@ class RoomManager {
 			chaussette.emit("error", "sorry, this player's name is already taken");
 			return false;
 		}
-		const room = this.find_or_create_room(msg.room_name);
+		const room = this.find_or_create_room(msg.room_name, msg.difficulty);
 		if (!this.is_room_available(room) && chaussette != null) 
 		{
 			chaussette.emit("error", "sorry, this room is not available");
