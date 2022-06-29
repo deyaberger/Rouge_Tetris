@@ -24,13 +24,16 @@ function disconnect(room, socket) {
 	}
 }
 
-function isValid(request) {
+function isValid(token) {
+	if (token != "astongertetristoken") {
+		return false
+	}
 	return true;
 }
 
 io.use((socket, next) => {
 	console.log("checkin middleware")
-  if (isValid(socket.request)) {
+  if (isValid(socket.handshake.auth.token)) {
     next();
   } else {
     next(new Error("invalid"));
