@@ -147,6 +147,7 @@ var corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.get('/', function (req,res) {
   res.sendFile("dist/index.html");
 });

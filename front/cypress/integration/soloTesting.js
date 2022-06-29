@@ -48,7 +48,7 @@ describe('Solo Test', () => {
     cy.contains('Player Name').type('Player 1');
     cy.contains('Room Name').type('Player 1\'s Room');
     cy.contains('GO').click();
-    cy.wait(100);
+    cy.wait(200);
     cy.get(':nth-child(2) > .q-btn__content > .block').click();
     cy.wait(1000);
     cy.get('.custom-area').type(' ');
@@ -64,7 +64,7 @@ describe('Solo Test', () => {
     cy.get('.custom-area').type(' ');
     cy.wait(1000);
     cy.get('.custom-area').type(' ');
-    cy.wait(1000);
+    cy.wait(2000);
     cy.get(':nth-child(2) > .q-btn__content > .block').click();
     cy.wait(1000);
     cy.get('.custom-area').type(' ');
@@ -81,9 +81,9 @@ describe('Solo Test', () => {
     cy.contains('Player Name').type('Player 1');
     cy.contains('Room Name').type('Player 1\'s Room');
     cy.contains('GO').click();
-    cy.wait(100);
+    cy.wait(200);
     cy.get(':nth-child(2) > .q-btn__content > .block').click();
-    cy.wait(1000);
+    cy.wait(2000);
     cy.get('.custom-area').click();
     cy.get('.custom-area').click();
     cy.get('.custom-area').type('{upArrow}');
@@ -95,12 +95,12 @@ describe('Solo Test', () => {
     cy.get('.custom-area').type('{rightArrow}');
     cy.get('.custom-area').type('{rightArrow}');
     cy.get('.custom-area').type(' ');
-    cy.wait(1000);
+    cy.wait(2000);
     cy.get(':nth-child(3) > .q-toggle > .q-toggle__inner > .q-toggle__thumb').click();
     cy.get(':nth-child(4) > .q-toggle > .q-toggle__inner > .q-toggle__thumb').click();
     cy.get(':nth-child(3) > .q-btn__content > .q-icon').click();
     cy.get(':nth-child(4) > .q-btn__content > .q-icon').click();
-    cy.wait(1000);
+    cy.wait(2000);
     cy.get(':nth-child(3) > .q-btn__content > .q-icon').click();
     cy.get('.custom-area').click();
     cy.get('.custom-area').click();
@@ -127,7 +127,7 @@ describe('Solo Test', () => {
     cy.get('.custom-area').type('{rightArrow}');
     cy.get('.custom-area').type('{rightArrow}');
     cy.get('.custom-area').type(' ');
-    cy.wait(1000);
+    cy.wait(2000);
     cy.get(':nth-child(5) > .q-btn__content').click();
   });
 });
