@@ -24,16 +24,21 @@ function disconnect(room, socket) {
 	}
 }
 
-// io.use((socket, next) => {
-//   if (isValid(socket.request)) {
-//     next();
-//   } else {
-//     next(new Error("invalid"));
-//   }
-// });
+function isValid(request) {
+	return true;
+}
+
+io.use((socket, next) => {
+	console.log("checkin middleware")
+  if (isValid(socket.request)) {
+    next();
+  } else {
+    next(new Error("invalid"));
+  }
+});
 
 io.on('connection', (socket) => {
-	// console.log('\na user connected: ' + socket.id);
+	console.log('\na user connected: ' + socket.id);
 
 	socket.on("room_info", () => {
 		socket.emit("room_state", room_manager.get_rooms_info());
