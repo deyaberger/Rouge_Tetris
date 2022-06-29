@@ -1,3 +1,4 @@
+const { log } = require('console');
 const seedrandom = require('seedrandom');
 const { Tetris } = require("./Tetris")
 
@@ -30,9 +31,11 @@ class Game {
 
 	check_winner(io, room, active_player_id, active_player_nb) {
 		if (active_player_id != null && active_player_nb == 1) {
-			if (Object.keys(this.players_list).length > 1) {
-				// this.pause(io, room.name);
+			console.log("checking for winner")
+			console.log(this.number_of_players)
+			if (this.number_of_players > 1) {
 				this.winner = this.players_list[active_player_id].name;
+				console.log("WE HAVE A WINNER")
 				if (io != null) {
 					this.stop(io, room)
 				}
@@ -73,6 +76,7 @@ class Game {
 	}
 
 	start(io, room) {
+		this.number_of_players = Object.keys(this.players_list).length
 		this.on = true;
 		this.paused = false;
 		let time_to_wait = 1000
@@ -86,6 +90,7 @@ class Game {
 	}
 
 	stop(io, room) {
+		this.number_of_players = 0
 		this.on = false;
 		clearInterval(this.interval);
 		this.interval = null;
