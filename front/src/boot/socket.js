@@ -5,7 +5,7 @@ const socket = io(
   'http://localhost:3000',
   {
     auth: {
-      token: "astongertetristoken",
+      token: 'astongertetristoken',
     },
   },
 );
