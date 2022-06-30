@@ -26,12 +26,18 @@ function disconnect(room, socket) {
 
 function isValid(token) {
 	if (token != "astongertetristoken") {
+		console.log("MiddleWare check: invalid!")
 		return false
 	}
+	console.log("MiddleWare check: valid!")
 	return true;
 }
 
 io.use((socket, next) => {
+	/**
+	 * This is our middleware: we check if our client has the right token to connect to our server
+	 * once this is validated, the client can connect through the function io.on('connection')
+	 */
 	console.log("checkin middleware")
   if (isValid(socket.handshake.auth.token)) {
     next();
@@ -41,16 +47,20 @@ io.use((socket, next) => {
 });
 
 io.on('connection', (socket) => {
-	console.log('\na user connected: ' + socket.id);
-
 	socket.on("room_info", () => {
+		/**
+		 * When a client his connected he can ask us for the rooms info: which rooms are available or not in which rooms
+		 */
 		socket.emit("room_state", room_manager.get_rooms_info());
 	});
 
 	var room = null;
 	var player = null;
+
 	socket.on('join_room', (msg) => {
-		// console.log("\nJoining Room: " + socket.id + "\n");
+		/**
+		 * Here the clients creates a username and joins a room. It has to be a unique name and an available room or unexisting room
+		 */
 		room = room_manager.handle_socket_msg(msg, socket);
 		if (room != null && room != false) {
 			player = room.players_list[socket.id];
@@ -58,28 +68,34 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('state_pong', (msg) => {
+		/**
+		 * the state pong replies to a ping: when we send a ping to all the clients in one room, each of them send us a pong so we can give them the necessary info one by one and not all at once
+		 */
 		if (room != null && player != null && room != undefined && player != undefined) {
-			// console.log("\nState Pong: " + socket.id)
 			socket.emit("game_state", room.get_state(socket.id));
 		}
 	})
 
 	socket.on('start', (msg) => {
+		/**
+		 * Only the master (first player to join a room) can decide wheter a game starts or not
+		 * Once started, the "interval" starts: each second, a block of tetris goes down
+		 */
 		if (room != null && room.master == player.name) {
-			// console.log("\nStarting game: " + socket.id)
 			room.game.on = true;
 			room.game.start(io, room);
 		}
 	})
 
 	socket.on('pause', (msg) => {
+		/**
+		 * THe master can decide to pause the game: suspend the interval
+		 */
 		if (room != null) {
 			if (msg == true) {
-				// console.log("\npause please: " + socket.id);
 				room.game.pause(io, room.name);
 			}
 			else if (msg == false) {
-				// console.log("\ncontinue please: " + socket.id);
 				room.game.start(io, room);
 			}
 		}
@@ -87,10 +103,14 @@ io.on('connection', (socket) => {
 
 	
 	socket.on('move', (msg) => {
+		/**
+		 * the client can send the move: rotate, left, right, space(to force the down)
+		 */
+
 		if (room != null && player != null && room.game.on == true) {
-			// console.log("\nmove: " + socket.id);
-			if (player.tetris.apply_move(msg) == false && msg == "space") {
-				player.tetris.apply_move("time")
+			player.tetris.apply_move(msg)
+			if (msg == "space") {
+				room.game.update_players_state(io, room)
 			};
 			socket.emit("game_state", room.get_state(socket.id));
 		}
@@ -98,16 +118,20 @@ io.on('connection', (socket) => {
 	})
 
 	socket.on('colors', (msg) => {
+		/**
+		 * THis is for turning on or off the colors (details) of the spectres shown on the screen
+		 */
 		if (room != null) {
-			// console.log("\ncolors: " + socket.id);
 			room.colors = msg;
 			socket.to(room.name).emit("state_ping");
 		}
 	})
 
 	socket.on('ghost', (msg) => {
+		/**
+		 * A player can decide wheter he wants to see the shadow, the ghost of its tetris pieces
+		 */
 		if (room != null && player != null && room.game.on == true) {
-			// console.log("\nghost: " + socket.id);
 			player.tetris.show_ghost = msg;
 			socket.emit("game_state", room.get_state(socket.id));
 		}
@@ -115,29 +139,37 @@ io.on('connection', (socket) => {
 	})
 
 	socket.on('stop', (msg) => {
-		// console.log("\nStop  please: " + socket.id);
+		/**
+		 * Only useful for debug
+		 */
 		if (room != null && room.game.on == true) {
 			room.game.stop(io, room);
 		}
 	})
 
 	socket.on('restart', (msg) => {
+		/**
+		 * Once a game is over, the master can decide to restart it
+		 */
 		if (room != null && room.game.on == false) {
-			// console.log("\nRestart: " + socket.id);
 			room.game.restart(io, room);
 		}
 	})
 
-	socket.on('quit', () => { 
+	socket.on('quit', () => {
+		/**
+		 * a player can quit the room 
+		 */
 		if (room != null) {
-			// console.log("\nQuit: " + socket.id);
 			disconnect(room, socket);
 		}
 	});
 
 	socket.on("disconnect", (reason) => {
+		/**
+		 * this is when a socket has disconnected from our server (by refreshing or quiting the page)
+		 */
 		if (room != null) {
-			// console.log("\ndisconnect: " + socket.id);
 			disconnect(room, socket);
 		}
 	  });
@@ -156,6 +188,6 @@ app.get('/', function (req,res) {
 });
 
 server.listen(3000, () => {
-//   console.log('\nlistening on *:3000');
+  console.log('\nlistening on *:3000');
 });
 
