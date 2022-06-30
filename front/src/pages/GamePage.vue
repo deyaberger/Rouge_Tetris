@@ -88,10 +88,14 @@ export default defineComponent({
     },
   },
   methods: {
+    stringsAreClear(a, b) {
+      return (!a.includes('#') && !b.includes('#'));
+    },
     joinRoom(room, player) {
       if (this.room.length === 0
       && room && player
-      && room.length > 0 && player.length > 0) {
+      && room.length > 0 && player.length > 0
+      && this.stringsAreClear(room, player)) {
         const msg = {
           room_name: room,
           player_name: player,

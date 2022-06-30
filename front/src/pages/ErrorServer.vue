@@ -11,7 +11,7 @@
         color="white"
         text-color="primary"
         unelevated
-        @click="home"
+        to="/"
         label="Go Home"
         no-caps
       />
@@ -24,10 +24,5 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ErrorServer',
-  methods: {
-    home() {
-      this.$router.push('/');
-    },
-  },
 });
 </script>

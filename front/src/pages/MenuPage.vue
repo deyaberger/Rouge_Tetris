@@ -127,8 +127,14 @@ export default {
         this.joinRoom();
       }
     },
+    stringsAreClear(a, b) {
+      return (!a.includes('#') && !b.includes('#'));
+    },
     joinRoom() {
-      if (this.room.length === 0) {
+      if (!this.stringsAreClear(this.playerName, this.roomName)) {
+        this.$router.push('notFound');
+      }
+      if (this.room.length === 0 && this.stringsAreClear(this.playerName, this.roomName)) {
         const msg = {
           player_name: this.playerName,
           room_name: this.roomName,
@@ -145,8 +151,12 @@ export default {
       immediate: true,
       handler(val) {
         if (val) {
-          const gameRoute = `${this.room}[${this.player}]`;
-          this.$router.push(gameRoute);
+          if (!this.stringsAreClear(this.player, this.room)) {
+            this.$router.push('notFound');
+          } else {
+            const gameRoute = `${this.room}[${this.player}]`;
+            this.$router.push(gameRoute);
+          }
         }
       },
     },
